@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI API Specification Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <h1>AI-assisted OpenAPI generation from requirements or code</h1>
+      </section>
+
+      <section class="panel form-panel">
+        <div class="field-grid">
+          <label class="field">
+            <span>Input type</span>
+            <select id="inputType">
+              <option value="requirements">Requirements text</option>
+              <option value="code">Code fragment</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>API title</span>
+            <input id="apiTitle" type="text" value="Generated API" />
+          </label>
+          <label class="field">
+            <span>Version</span>
+            <input id="apiVersion" type="text" value="1.0.0" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Requirements text or source code</span>
+          <textarea id="content" rows="14">Lietotājs izveido profilu ar vārdu, e-pastu un paroli.
+Lietotājs iegūst profilu pēc id.
+Lietotājs atjauno profilu ar vārdu un e-pastu.
+Lietotājs izdzēš profilu pēc id.</textarea>
+        </label>
+
+        <button id="generateButton" class="primary">Generate specification</button>
+        <p id="status" class="status">Ready.</p>
+      </section>
+
+      <section class="panel results-panel">
+        <div class="result-header">
+          <h2>Results</h2>
+          <div id="badgeRow" class="badge-row"></div>
+        </div>
+        <p class="results-note">The `Documentation` tab contains the generated human-readable API documentation derived from the OpenAPI specification.</p>
+        <div class="tabs">
+          <button class="tab active" data-target="yamlPanel">OpenAPI YAML</button>
+          <button class="tab" data-target="docsPanel">Documentation</button>
+          <button class="tab" data-target="validationPanel">Validation</button>
+          <button class="tab" data-target="preprocessingPanel">Preprocessing</button>
+          <button class="tab" data-target="elementsPanel">Extracted elements</button>
+        </div>
+        <div class="output-stack">
+          <button id="copyButton" class="copy-button" type="button">Copy</button>
+          <div id="copyToast" class="copy-toast">Copied</div>
+          <div class="tab-panel active" id="yamlPanel"><pre id="yamlOutput"></pre></div>
+          <div class="tab-panel" id="docsPanel"><pre id="docsOutput"></pre></div>
+          <div class="tab-panel" id="validationPanel"><pre id="validationOutput"></pre></div>
+          <div class="tab-panel" id="preprocessingPanel"><pre id="preprocessingOutput"></pre></div>
+          <div class="tab-panel" id="elementsPanel"><pre id="elementsOutput"></pre></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
