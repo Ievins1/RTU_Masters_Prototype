@@ -67,6 +67,11 @@ function renderBadges(result) {
   });
 }
 
+function formatJsonForDisplay(value) {
+  // Pretty-print JSON while converting escaped newlines into visible line breaks inside strings.
+  return JSON.stringify(value, null, 2).replace(/\\n/g, "\n");
+}
+
 async function generate() {
   // Send the form input to the backend and populate all result panels.
   const payload = {
@@ -95,9 +100,9 @@ async function generate() {
     const result = await response.json();
     refs.yamlOutput.textContent = result.openapi_yaml;
     refs.docsOutput.textContent = result.documentation_markdown;
-    refs.validationOutput.textContent = JSON.stringify(result.validation, null, 2);
-    refs.preprocessingOutput.textContent = JSON.stringify(result.preprocessing, null, 2);
-    refs.elementsOutput.textContent = JSON.stringify(result.extracted_elements, null, 2);
+    refs.validationOutput.textContent = formatJsonForDisplay(result.validation);
+    refs.preprocessingOutput.textContent = formatJsonForDisplay(result.preprocessing);
+    refs.elementsOutput.textContent = formatJsonForDisplay(result.extracted_elements);
     renderBadges(result);
 
     const fallbackNote = result.llm_error ? ` LLM error: ${result.llm_error}` : "";
