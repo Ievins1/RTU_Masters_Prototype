@@ -60,6 +60,7 @@ Lietotājs izdzēš profilu pēc id.</textarea>
         <p class="results-note">The `Documentation` tab contains the generated human-readable API documentation derived from the OpenAPI specification.</p>
         <div class="tabs">
           <button class="tab active" data-target="yamlPanel">OpenAPI YAML</button>
+          <button class="tab" data-target="jsonPanel">OpenAPI JSON</button>
           <button class="tab" data-target="docsPanel">Documentation</button>
           <button class="tab" data-target="validationPanel">Validation</button>
           <button class="tab" data-target="preprocessingPanel">Preprocessing</button>
@@ -69,6 +70,7 @@ Lietotājs izdzēš profilu pēc id.</textarea>
           <button id="copyButton" class="copy-button" type="button">Copy</button>
           <div id="copyToast" class="copy-toast">Copied</div>
           <div class="tab-panel active" id="yamlPanel"><pre id="yamlOutput"></pre></div>
+          <div class="tab-panel" id="jsonPanel"><pre id="jsonOutput"></pre></div>
           <div class="tab-panel" id="docsPanel"><pre id="docsOutput"></pre></div>
           <div class="tab-panel" id="validationPanel"><pre id="validationOutput"></pre></div>
           <div class="tab-panel" id="preprocessingPanel"><pre id="preprocessingOutput"></pre></div>

@@ -8,6 +8,7 @@ const refs = {
   apiVersion: document.getElementById("apiVersion"),
   content: document.getElementById("content"),
   yamlOutput: document.getElementById("yamlOutput"),
+  jsonOutput: document.getElementById("jsonOutput"),
   docsOutput: document.getElementById("docsOutput"),
   validationOutput: document.getElementById("validationOutput"),
   preprocessingOutput: document.getElementById("preprocessingOutput"),
@@ -99,6 +100,7 @@ async function generate() {
 
     const result = await response.json();
     refs.yamlOutput.textContent = result.openapi_yaml;
+    refs.jsonOutput.textContent = formatJsonForDisplay(result.openapi_spec);
     refs.docsOutput.textContent = result.documentation_markdown;
     refs.validationOutput.textContent = formatJsonForDisplay(result.validation);
     refs.preprocessingOutput.textContent = formatJsonForDisplay(result.preprocessing);
