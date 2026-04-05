@@ -2,7 +2,7 @@
 
 Containerized prototype for AI-assisted OpenAPI specification and documentation generation
 
-The application supports two main input modes:
+The application accepts a single input area and automatically detects whether the content is closer to:
 
 1. Requirements text
 2. Code fragment
@@ -28,6 +28,7 @@ Set the following values in `.env`:
 
 - `OPENAI_API_KEY`: your OpenAI API key
 - `OPENAI_MODEL`: model name, for example `gpt-5.4`
+- `OPENAI_FAST_MODEL`: faster model used by the UI `Fast` mode, for example `gpt-5.4-mini`
 - `OPENAI_TIMEOUT_SECONDS`: request timeout for the SDK client
 
 The backend uses the official OpenAI Python SDK and the Responses API.
@@ -63,12 +64,13 @@ The main backend endpoint is:
 It accepts:
 
 - `input_type`: `requirements` or `code`
+- `generation_mode`: `fast` or `balanced`
 - `content`: user input
 - `api_title`: title for the generated API
 - `api_version`: version for the generated API
 
 ## Notes
 
-- Requirements text and code fragments are currently processed through different preprocessing branches.
+- The backend automatically detects whether the submitted content looks like natural-language requirements or code and then uses the corresponding preprocessing branch.
 - The `Documentation` tab in the UI displays documentation generated from the produced OpenAPI structure.
 - For a backend file-by-file explanation, see [Explanation.md](/Users/rihardsievins/Documents/RTU%20-%20Magistrs/Magistra%20Darbs/Mag_prototips/RTU_Masters_Prototype/Explanation.md).

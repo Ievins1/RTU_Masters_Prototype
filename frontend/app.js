@@ -3,7 +3,7 @@ const refs = {
   copyButton: document.getElementById("copyButton"),
   copyToast: document.getElementById("copyToast"),
   status: document.getElementById("status"),
-  inputType: document.getElementById("inputType"),
+  generationMode: document.getElementById("generationMode"),
   apiTitle: document.getElementById("apiTitle"),
   apiVersion: document.getElementById("apiVersion"),
   content: document.getElementById("content"),
@@ -16,10 +16,12 @@ const refs = {
 };
 
 function setStatus(message) {
+  // Update the status line shown under the form.
   refs.status.textContent = message;
 }
 
 function getActiveOutputElement() {
+  // Return the currently visible output panel element.
   const activePanel = document.querySelector(".tab-panel.active pre");
   return activePanel;
 }
@@ -27,6 +29,7 @@ function getActiveOutputElement() {
 let copyToastTimer;
 
 async function copyActiveOutput() {
+  // Copy the currently visible output text and show a short confirmation toast.
   const activeOutput = getActiveOutputElement();
   const text = activeOutput ? activeOutput.textContent : "";
 
@@ -48,6 +51,7 @@ async function copyActiveOutput() {
 }
 
 function renderBadges(result) {
+  // Render summary badges for validation and extraction status.
   refs.badgeRow.innerHTML = "";
   const badges = [
     { label: result.validation.valid ? "Schema valid" : "Schema invalid", warn: !result.validation.valid },
@@ -64,11 +68,13 @@ function renderBadges(result) {
 }
 
 async function generate() {
+  // Send the form input to the backend and populate all result panels.
   const payload = {
-    input_type: refs.inputType.value,
-    api_title: refs.apiTitle.value,
-    api_version: refs.apiVersion.value,
-    content: refs.content.value,
+    input_type: "auto",
+    generation_mode: refs.generationMode ? refs.generationMode.value : "balanced",
+    api_title: refs.apiTitle ? refs.apiTitle.value : "Generated API",
+    api_version: refs.apiVersion ? refs.apiVersion.value : "1.0.0",
+    content: refs.content ? refs.content.value : "",
   };
 
   setStatus("Generating specification...");
@@ -82,7 +88,8 @@ async function generate() {
     });
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Request failed with status ${response.status}: ${errorText}`);
     }
 
     const result = await response.json();
@@ -104,6 +111,7 @@ async function generate() {
 
 document.querySelectorAll(".tab").forEach((button) => {
   button.addEventListener("click", () => {
+    // Switch the visible results panel when a tab is clicked.
     document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
     document.querySelectorAll(".tab-panel").forEach((panel) => panel.classList.remove("active"));
     button.classList.add("active");
@@ -111,5 +119,10 @@ document.querySelectorAll(".tab").forEach((button) => {
   });
 });
 
-refs.button.addEventListener("click", generate);
-refs.copyButton.addEventListener("click", copyActiveOutput);
+if (refs.button) {
+  refs.button.addEventListener("click", generate);
+}
+
+if (refs.copyButton) {
+  refs.copyButton.addEventListener("click", copyActiveOutput);
+}

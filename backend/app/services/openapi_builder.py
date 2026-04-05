@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 
 
 def _schema_for_type(type_name: str) -> Dict[str, Any]:
+    """Map a simple extracted type name to an OpenAPI schema snippet."""
     normalized = (type_name or "string").lower()
     if normalized in {"int", "integer"}:
         return {"type": "integer"}
@@ -16,6 +17,7 @@ def _schema_for_type(type_name: str) -> Dict[str, Any]:
 
 
 def _build_component_schema(name: str, fields: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Build an object schema from extracted field metadata."""
     properties = {}
     required = []
     for field in fields:
@@ -33,6 +35,7 @@ def _build_component_schema(name: str, fields: List[Dict[str, Any]]) -> Dict[str
 
 
 def build_openapi_spec(extracted: Dict[str, Any], title: str, version: str, server_url: str) -> Dict[str, Any]:
+    """Convert extracted API elements into a full OpenAPI document."""
     spec: Dict[str, Any] = {
         "openapi": "3.1.0",
         "info": {
@@ -114,4 +117,3 @@ def build_openapi_spec(extracted: Dict[str, Any], title: str, version: str, serv
         path_item[method] = operation
 
     return spec
-

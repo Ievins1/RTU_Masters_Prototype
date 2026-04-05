@@ -5,6 +5,7 @@ from openapi_spec_validator.validation.exceptions import OpenAPIValidationError
 
 
 def validate_openapi(spec: Dict[str, Any]) -> Dict[str, Any]:
+    """Validate OpenAPI structure and collect additional semantic warnings."""
     schema_errors: List[str] = []
     semantic_warnings: List[str] = []
 
@@ -32,4 +33,3 @@ def validate_openapi(spec: Dict[str, Any]) -> Dict[str, Any]:
         "schema_errors": schema_errors,
         "semantic_warnings": semantic_warnings,
     }
-

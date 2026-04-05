@@ -4,7 +4,8 @@ from pydantic import BaseModel, Field
 
 
 class GenerateRequest(BaseModel):
-    input_type: Literal["requirements", "code"]
+    input_type: Literal["auto", "requirements", "code"] = "auto"
+    generation_mode: Literal["fast", "balanced"] = "balanced"
     content: str = Field(min_length=1)
     api_title: str = Field(default="Generated API")
     api_version: str = Field(default="1.0.0")

@@ -21,10 +21,10 @@
       <section class="panel form-panel">
         <div class="field-grid">
           <label class="field">
-            <span>Input type</span>
-            <select id="inputType">
-              <option value="requirements">Requirements text</option>
-              <option value="code">Code fragment</option>
+            <span>Generation mode</span>
+            <select id="generationMode">
+              <option value="fast">Fast (GPT-5.4 mini)</option>
+              <option value="balanced" selected>Balanced (Default GPT-5.4)</option>
             </select>
           </label>
           <label class="field">
@@ -38,7 +38,7 @@
         </div>
 
         <label class="field">
-          <span>Requirements text or source code</span>
+          <span>Input text or code</span>
           <textarea id="content" rows="14">Lietotājs izveido profilu ar vārdu, e-pastu un paroli.
 Lietotājs iegūst profilu pēc id.
 Lietotājs atjauno profilu ar vārdu un e-pastu.

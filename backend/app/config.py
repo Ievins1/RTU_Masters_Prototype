@@ -14,7 +14,9 @@ class Settings(BaseSettings):
 
     openai_api_key: str = ""
     openai_model: str = "gpt-5.4"
+    openai_fast_model: str = "gpt-5.4-mini"
     openai_timeout_seconds: int = 60
+    openai_context_char_limit: int = 4000
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -26,4 +28,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
+    """Load and cache application settings from environment variables."""
     return Settings()

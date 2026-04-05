@@ -24,11 +24,12 @@ app.add_middleware(
 
 @app.get("/health")
 def health() -> dict:
+    """Return a simple health response for container and service checks."""
     return {"status": "ok", "environment": settings.app_env}
 
 
 @app.post("/api/v1/generate", response_model=GenerateResponse)
 def generate_specification(request: GenerateRequest) -> dict:
+    """Run the full generation pipeline for the submitted input."""
     response, _, _ = run_pipeline(request, settings)
     return response
-

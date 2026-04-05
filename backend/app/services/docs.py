@@ -2,7 +2,18 @@ from typing import Any, Dict, List
 
 
 def build_markdown_docs(spec: Dict[str, Any]) -> str:
+    """Generate human-readable Markdown documentation from the OpenAPI spec."""
     info = spec.get("info", {})
+    paths = spec.get("paths", {})
+
+    if not paths:
+        return (
+            f"# {info.get('title', 'Generated API')}\n\n"
+            f"{info.get('description', '')}\n\n"
+            "## Documentation Status\n\n"
+            "No API documentation could be generated because no API endpoints were identified from the provided input.\n"
+        )
+
     lines: List[str] = [
         f"# {info.get('title', 'Generated API')}",
         "",
@@ -12,7 +23,7 @@ def build_markdown_docs(spec: Dict[str, Any]) -> str:
         "",
     ]
 
-    for path, path_item in spec.get("paths", {}).items():
+    for path, path_item in paths.items():
         for method, operation in path_item.items():
             lines.append(f"### `{method.upper()} {path}`")
             lines.append("")
@@ -35,4 +46,3 @@ def build_markdown_docs(spec: Dict[str, Any]) -> str:
             lines.append("")
 
     return "\n".join(lines).strip() + "\n"
-
