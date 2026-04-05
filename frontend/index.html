@@ -21,10 +21,13 @@
       <section class="panel form-panel">
         <div class="field-grid">
           <label class="field">
-            <span>Generation mode</span>
-            <select id="generationMode">
-              <option value="fast">Fast (GPT-5.4 mini)</option>
-              <option value="balanced" selected>Balanced (Default GPT-5.4)</option>
+            <span>AI model</span>
+            <select id="modelChoice">
+              <option value="gpt_default" selected>GPT-5.4 Default</option>
+              <option value="gpt_fast">GPT-5.4 Mini</option>
+              <option value="claude_balanced">Claude Balanced (Sonnet 4.6)</option>
+              <option value="claude_fast">Claude Fast (Haiku 4.5)</option>
+              <option value="claude_advanced">Claude Advanced (Opus 4.6)</option>
             </select>
           </label>
           <label class="field">

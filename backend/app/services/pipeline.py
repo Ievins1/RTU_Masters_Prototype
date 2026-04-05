@@ -3,9 +3,9 @@ from typing import Any, Dict, List, Tuple
 
 import yaml
 
+from app.ai_agents import maybe_extract_with_llm
 from app.config import Settings
 from app.schemas import GenerateRequest
-from app.services.ai_client import maybe_extract_with_llm
 from app.services.docs import build_markdown_docs
 from app.services.openapi_builder import build_openapi_spec
 from app.services.preprocess import KNOWN_FIELDS, ascii_slug, preprocess_input
@@ -232,7 +232,7 @@ def run_pipeline(request: GenerateRequest, settings: Settings) -> Tuple[Dict[str
     llm_result, llm_error = maybe_extract_with_llm(
         settings,
         request.input_type,
-        request.generation_mode,
+        request.model_choice,
         preprocessing,
         request.content,
     )

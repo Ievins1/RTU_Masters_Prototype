@@ -5,3 +5,4 @@ pydantic-settings==2.10.1
 PyYAML==6.0.2
 openapi-spec-validator==0.7.2
 openai==1.108.1
+anthropic>=0.40.0,<1.0.0

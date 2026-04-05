@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 class GenerateRequest(BaseModel):
     input_type: Literal["auto", "requirements", "code"] = "auto"
-    generation_mode: Literal["fast", "balanced"] = "balanced"
+    model_choice: Literal["gpt_default", "gpt_fast", "claude_balanced", "claude_fast", "claude_advanced"] = "gpt_default"
     content: str = Field(min_length=1)
     api_title: str = Field(default="Generated API")
     api_version: str = Field(default="1.0.0")

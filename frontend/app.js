@@ -3,7 +3,7 @@ const refs = {
   copyButton: document.getElementById("copyButton"),
   copyToast: document.getElementById("copyToast"),
   status: document.getElementById("status"),
-  generationMode: document.getElementById("generationMode"),
+  modelChoice: document.getElementById("modelChoice"),
   apiTitle: document.getElementById("apiTitle"),
   apiVersion: document.getElementById("apiVersion"),
   content: document.getElementById("content"),
@@ -71,7 +71,7 @@ async function generate() {
   // Send the form input to the backend and populate all result panels.
   const payload = {
     input_type: "auto",
-    generation_mode: refs.generationMode ? refs.generationMode.value : "balanced",
+    model_choice: refs.modelChoice ? refs.modelChoice.value : "gpt_default",
     api_title: refs.apiTitle ? refs.apiTitle.value : "Generated API",
     api_version: refs.apiVersion ? refs.apiVersion.value : "1.0.0",
     content: refs.content ? refs.content.value : "",

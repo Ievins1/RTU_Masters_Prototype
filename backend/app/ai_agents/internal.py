@@ -1,14 +1,11 @@
 import json
 import re
-from typing import Any, Dict, Optional, Tuple
-
-from openai import OpenAI
-from openai import OpenAIError
+from typing import Any, Dict
 
 from app.config import Settings
 
 
-def _strip_code_fences(text: str) -> str:
+def strip_code_fences(text: str) -> str:
     """Remove markdown code fences from model output before JSON parsing."""
     text = text.strip()
     if text.startswith("```"):
@@ -17,23 +14,27 @@ def _strip_code_fences(text: str) -> str:
     return text.strip()
 
 
-def _truncate_text(value: str, limit: int) -> str:
+def truncate_text(value: str, limit: int) -> str:
     """Trim long text so the model receives only the most relevant leading context."""
     if len(value) <= limit:
         return value
     return value[:limit].rstrip() + "\n...[truncated]"
 
 
-def _compact_preprocessing_result(preprocessing_result: Dict[str, Any]) -> Dict[str, Any]:
+def compact_preprocessing_result(preprocessing_result: Dict[str, Any]) -> Dict[str, Any]:
     """Shrink preprocessing output into a lightweight summary for the model prompt."""
     if "sentences" in preprocessing_result:
         return {
+            "requested_input_type": preprocessing_result.get("requested_input_type"),
+            "detected_input_type": preprocessing_result.get("detected_input_type"),
             "sentence_count": preprocessing_result.get("sentence_count", 0),
             "steps": preprocessing_result.get("steps", []),
             "sentences": preprocessing_result.get("sentences", [])[:8],
         }
 
     return {
+        "requested_input_type": preprocessing_result.get("requested_input_type"),
+        "detected_input_type": preprocessing_result.get("detected_input_type"),
         "line_count": preprocessing_result.get("line_count", 0),
         "steps": preprocessing_result.get("steps", []),
         "routes": preprocessing_result.get("routes", [])[:10],
@@ -42,28 +43,19 @@ def _compact_preprocessing_result(preprocessing_result: Dict[str, Any]) -> Dict[
     }
 
 
-def maybe_extract_with_llm(
-    settings: Settings,
+def build_extraction_prompt(
     input_type: str,
-    generation_mode: str,
+    model_choice: str,
     preprocessing_result: Dict[str, Any],
     raw_content: str,
-) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-    """Call OpenAI to classify the input and extract API structure when configured."""
-    if not settings.openai_api_key or not settings.openai_model:
-        return None, None
-
-    client = OpenAI(
-        api_key=settings.openai_api_key,
-        timeout=settings.openai_timeout_seconds,
-    )
-
-    compact_preprocessing = _compact_preprocessing_result(preprocessing_result)
-    compact_content = _truncate_text(raw_content, settings.openai_context_char_limit)
-    selected_model = settings.openai_fast_model if generation_mode == "fast" else settings.openai_model
+    context_limit: int,
+) -> str:
+    """Build the shared extraction prompt for supported AI providers."""
+    compact_preprocessing = compact_preprocessing_result(preprocessing_result)
+    compact_content = truncate_text(raw_content, context_limit)
     effective_input_type = preprocessing_result.get("detected_input_type", input_type)
 
-    input_text = (
+    return (
         "<task>\n"
         "Analyze the provided content and extract API design information for later OpenAPI generation.\n"
         "First decide whether the content is actually API-related.\n"
@@ -110,7 +102,7 @@ def maybe_extract_with_llm(
         "<context>\n"
         f"Requested input type: {input_type}\n\n"
         f"Detected input type: {effective_input_type}\n\n"
-        f"Generation mode: {generation_mode}\n\n"
+        f"Selected model choice: {model_choice}\n\n"
         "Preprocessing result:\n"
         f"{json.dumps(compact_preprocessing, ensure_ascii=False, separators=(',', ':'))}\n\n"
         "Original content:\n"
@@ -118,12 +110,14 @@ def maybe_extract_with_llm(
         "</context>\n"
     )
 
-    try:
-        response = client.responses.create(
-            model=selected_model,
-            input=input_text,
-        )
-        content = _strip_code_fences(response.output_text or "")
-        return json.loads(content), None
-    except (OpenAIError, json.JSONDecodeError, TimeoutError) as exc:
-        return None, str(exc)
+
+def resolve_model_choice(settings: Settings, model_choice: str) -> Dict[str, str]:
+    """Map a UI model choice to the provider and concrete model name."""
+    catalog = {
+        "gpt_default": {"provider": "openai", "model": settings.openai_model},
+        "gpt_fast": {"provider": "openai", "model": settings.openai_fast_model},
+        "claude_balanced": {"provider": "anthropic", "model": settings.anthropic_balanced_model},
+        "claude_fast": {"provider": "anthropic", "model": settings.anthropic_fast_model},
+        "claude_advanced": {"provider": "anthropic", "model": settings.anthropic_advanced_model},
+    }
+    return catalog.get(model_choice, catalog["gpt_default"])

@@ -27,13 +27,18 @@ The implemented processing flow is:
 Set the following values in `.env`:
 
 - `OPENAI_API_KEY`: your OpenAI API key
-- `OPENAI_MODEL`: model name, for example `gpt-5.4`
-- `OPENAI_FAST_MODEL`: faster model used by the UI `Fast` mode, for example `gpt-5.4-mini`
-- `OPENAI_TIMEOUT_SECONDS`: request timeout for the SDK client
+- `OPENAI_MODEL`: default OpenAI model, for example `gpt-5.4`
+- `OPENAI_FAST_MODEL`: faster OpenAI model, for example `gpt-5.4-mini`
+- `OPENAI_TIMEOUT_SECONDS`: OpenAI request timeout
+- `ANTHROPIC_API_KEY`: your Anthropic API key
+- `ANTHROPIC_BALANCED_MODEL`: balanced Claude model, for example `claude-sonnet-4-6`
+- `ANTHROPIC_FAST_MODEL`: faster Claude model, for example `claude-haiku-4-5`
+- `ANTHROPIC_ADVANCED_MODEL`: advanced Claude model, for example `claude-opus-4-6`
+- `ANTHROPIC_TIMEOUT_SECONDS`: Anthropic request timeout
 
-The backend uses the official OpenAI Python SDK and the Responses API.
+The backend supports both the official OpenAI Python SDK and the official Anthropic Python SDK.
 
-If OpenAI variables are not provided, the system still runs, but it falls back to a much simpler heuristic mode. That fallback is mainly useful for structural testing, not for high-quality semantic extraction from natural language.
+If the selected provider is not configured, the system still runs, but it falls back to a much simpler heuristic mode. That fallback is mainly useful for structural testing, not for high-quality semantic extraction from natural language.
 
 ## Main Output
 
@@ -64,7 +69,7 @@ The main backend endpoint is:
 It accepts:
 
 - `input_type`: `requirements` or `code`
-- `generation_mode`: `fast` or `balanced`
+- `model_choice`: selected OpenAI or Claude model profile
 - `content`: user input
 - `api_title`: title for the generated API
 - `api_version`: version for the generated API

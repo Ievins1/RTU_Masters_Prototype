@@ -18,6 +18,13 @@ class Settings(BaseSettings):
     openai_timeout_seconds: int = 60
     openai_context_char_limit: int = 4000
 
+    anthropic_api_key: str = ""
+    anthropic_balanced_model: str = "claude-sonnet-4-6"
+    anthropic_fast_model: str = "claude-haiku-4-5"
+    anthropic_advanced_model: str = "claude-opus-4-6"
+    anthropic_timeout_seconds: int = 60
+    anthropic_context_char_limit: int = 4000
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
