@@ -226,18 +226,38 @@ def _dedupe_preserve_order(items: List[str]) -> List[str]:
     return result
 
 
+def _non_api_result(preprocessing: Dict[str, Any]) -> Dict[str, Any]:
+    """Build a minimal extraction result for inputs rejected before AI generation."""
+    classification = preprocessing.get("relevance_classification", {})
+    reason = classification.get("reason", "The input was classified as non-API-related.")
+    return {
+        "is_api_related": False,
+        "reason": reason,
+        "summary": "No API specification was generated because the input does not appear to describe API behavior.",
+        "assumptions": [],
+        "warnings": [reason],
+        "endpoints": [],
+    }
+
+
 def run_pipeline(request: GenerateRequest, settings: Settings) -> Tuple[Dict[str, Any], bool, str | None]:
     """Execute preprocessing, extraction, generation, validation, and documentation steps."""
     preprocessing = preprocess_input(request.input_type, request.content)
-    llm_result, llm_error = maybe_extract_with_llm(
-        settings,
-        request.input_type,
-        request.model_choice,
-        preprocessing,
-        request.content,
-    )
+    relevance = preprocessing.get("relevance_classification", {}).get("relevance")
 
-    extracted = llm_result or _fallback_extraction(request.input_type, preprocessing)
+    llm_result = None
+    llm_error = None
+    if relevance == "non_api":
+        extracted = _non_api_result(preprocessing)
+    else:
+        llm_result, llm_error = maybe_extract_with_llm(
+            settings,
+            request.input_type,
+            request.model_choice,
+            preprocessing,
+            request.content,
+        )
+        extracted = llm_result or _fallback_extraction(request.input_type, preprocessing)
     extracted.setdefault("is_api_related", True)
     extracted.setdefault("reason", "")
     extracted.setdefault("summary", "Generated API extraction result.")

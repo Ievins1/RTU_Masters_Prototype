@@ -136,6 +136,44 @@ def detect_input_type(content: str) -> str:
     return "code" if score >= 2 else "requirements"
 
 
+def classify_input_relevance(content: str, detected_input_type: str) -> Dict[str, str]:
+    """Classify only clearly non-API input locally and leave the rest to the model."""
+    normalized = normalize_text(content)
+    lowered = normalized.lower()
+
+    non_api_patterns = [
+        r"^\s*what\s+is\s+\d+\s*[\+\-\*/]\s*\d+\s*\??\s*$",
+        r"^\s*\d+\s*[\+\-\*/]\s*\d+\s*=?\s*$",
+        r"^\s*hello[!.]?\s*$",
+        r"^\s*hi[!.]?\s*$",
+        r"^\s*hey[!.]?\s*$",
+        r"^\s*thanks?[!.]?\s*$",
+    ]
+
+    if detected_input_type == "code":
+        return {
+            "relevance": "uncertain",
+            "reason": "The input looks like code and should be evaluated by the model.",
+        }
+
+    if any(re.match(pattern, lowered) for pattern in non_api_patterns):
+        return {
+            "relevance": "non_api",
+            "reason": "The input looks like a general question or arithmetic expression rather than an API description.",
+        }
+
+    if len(normalized) <= 3:
+        return {
+            "relevance": "non_api",
+            "reason": "The input is too short to evaluate as an API description.",
+        }
+
+    return {
+        "relevance": "uncertain",
+        "reason": "The input should be evaluated by the model instead of local hardcoded rules.",
+    }
+
+
 def preprocess_input(input_type: str, content: str) -> Dict[str, Any]:
     """Dispatch preprocessing based on the selected input type."""
     effective_input_type = detect_input_type(content) if input_type == "auto" else input_type
@@ -145,6 +183,7 @@ def preprocess_input(input_type: str, content: str) -> Dict[str, Any]:
     else:
         result = preprocess_code(content)
 
+    result["relevance_classification"] = classify_input_relevance(content, effective_input_type)
     result["detected_input_type"] = effective_input_type
     result["requested_input_type"] = input_type
     return result
