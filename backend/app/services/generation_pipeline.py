@@ -6,9 +6,9 @@ import yaml
 from app.ai_agents import maybe_extract_with_llm
 from app.config import Settings
 from app.schemas import GenerateRequest
-from app.services.docs import build_markdown_docs
-from app.services.openapi_builder import build_openapi_spec
-from app.services.preprocess import KNOWN_FIELDS, ascii_slug, preprocess_input
+from app.services.documentation_generator import build_markdown_docs
+from app.services.input_preprocessor import KNOWN_FIELDS, ascii_slug, preprocess_input
+from app.services.openapi_generator import build_openapi_spec
 from app.services.validator import validate_openapi
 
 

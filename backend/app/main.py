@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.schemas import GenerateRequest, GenerateResponse
-from app.services.pipeline import run_pipeline
+from app.services.generation_pipeline import run_pipeline
 
 settings = get_settings()
 
