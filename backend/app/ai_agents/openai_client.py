@@ -32,6 +32,11 @@ def extract_with_openai(
         settings.openai_context_char_limit,
     )
 
+    # Just to see the prompt output
+    print("\n===== LLM PROMPT START =====\n")
+    print(prompt)
+    print("\n===== LLM PROMPT END =====\n")
+
     try:
         response = client.responses.create(
             model=selection["model"],
