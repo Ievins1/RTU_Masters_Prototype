@@ -1,0 +1,4769 @@
+﻿Testa scenārijs (Test scenario),Datu kopas veids un ievades piemērs nr. (Task type and used tasks nr.),OpenAPI specifikācija YAML (OpenAPI specification),API Dokumentācija (API Documentation),Izmantotā uzvedne (Used prompt)
+Dabīgās valodas prasību teksts,Dabīgās valodas prasību teksts - 1. piemērs,,,"Lietotājs izveido profilu ar vārdu, e-pastu un paroli. Lietotājs iegūst profilu ar id."
+,Dabīgās valodas prasību teksts - 2. piemērs,,,"Sistēma ļauj izveidot pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu. Lietotājs var apskatīt pasūtījumu ar id, atjaunot piegādes adresi, pasūtījuma statusu un dzēst pasūtījumu, izmantojot id."
+,Koda fragments - 1. piemērs,,,"@app.post(""/profiles"")
+def create_profile(payload: ProfileCreate):
+    pass
+
+@app.get(""/profiles/{id}"")
+def get_profile(id: str):
+    pass"
+,Koda fragments - 2. piemērs,,,"@router.post(""/orders"")
+def create_order(payload: OrderCreate):
+    pass
+
+@router.get(""/orders/{id}"")
+def get_order(id: int):
+    pass
+
+@router.put(""/orders/{id}"")
+def update_order(id: int, payload: OrderUpdate):
+    pass
+
+@router.delete(""/orders/{id}"")
+def delete_order(id: int):
+    pass"
+,Jaukta ievade - 1. piemērs,,,"Sistēmai jāļauj izveidot un apskatīt profilu.
+@app.post(""/profiles"")
+def create_profile(payload: ProfileCreate):
+    pass
+@app.get(""/profiles/{id}"")
+def get_profile(id: str):
+    pass"
+,Jaukta ievade - 2. piemērs,,,"Klientam jāspēj izveidot pasūtījumu, apskatīt to pēc identifikatora, atjaunot piegādes informāciju un dzēst pasūtījumu.
+@router.post(""/orders"")
+def create_order(payload: OrderCreate):
+    pass
+@router.get(""/orders/{id}"")
+def get_order(id: int):
+    pass
+@router.patch(""/orders/{id}"")
+def update_order(id: int, payload: OrderUpdate):
+    pass
+@router.delete(""/orders/{id}"")
+def delete_order(id: int):
+    pass"
+,API nesaistīta vai nepietiekama ievade - 1. piemērs,,,What is 2+2?
+,API nesaistīta vai nepietiekama ievade - 2. piemērs,,,"Sistēmai jābūt modernai, saprotamai, lietotājam draudzīgai un ar ātru veiktspēju. Sistēmai ir jānodrošina lietotājam laba pieredze un pārskatāms dizains."
+Koda fragments,Dabīgās valodas prasību teksts - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API ietver profila izveidi un profila iegūšanu pēc id.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Izveidot profilu
+      description: Izveido jaunu profilu ar vārdu, e-pastu un paroli.
+      operationId: createProfile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createProfileResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createProfileRequest'
+  /profiles/{id}:
+    get:
+      summary: Iegūt profilu pēc id
+      description: Atgriež profilu pēc tā identifikatora.
+      operationId: getProfileById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Profila identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getProfileByIdResponse'
+components:
+  schemas:
+    createProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Lietotāja vārds.
+        email:
+          type: string
+          description: Lietotāja e-pasta adrese.
+        password:
+          type: string
+          description: Lietotāja parole.
+      required:
+      - name
+      - email
+      - password
+    createProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Izveidotā profila identifikators.
+        name:
+          type: string
+          description: Lietotāja vārds.
+        email:
+          type: string
+          description: Lietotāja e-pasta adrese.
+      required:
+      - id
+      - name
+      - email
+    getProfileByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Profila identifikators.
+        name:
+          type: string
+          description: Lietotāja vārds.
+        email:
+          type: string
+          description: Lietotāja e-pasta adrese.
+      required:
+      - id
+      - name
+      - email
+","# Generated API
+
+API ietver profila izveidi un profila iegūšanu pēc id.
+
+## Endpoints
+
+### `POST /profiles`
+
+Izveidot profilu
+
+Izveido jaunu profilu ar vārdu, e-pastu un paroli.
+
+Request body is expected in `application/json` format.
+
+### `GET /profiles/{id}`
+
+Iegūt profilu pēc id
+
+Atgriež profilu pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Profila identifikators. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<few_shot_examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: is_api_related=false, endpoints=[]
+
+Example B input: 'User creates a profile with name, email and password. User gets profile by id.'
+Example B output pattern: is_api_related=true with a POST profile endpoint and a GET profile-by-id endpoint.
+
+Example C input: '@app.get(""/orders/{id}"")\ndef get_order(id: str): ...'
+Example C output pattern: is_api_related=true with a GET /orders/{id} endpoint and id path parameter.
+</few_shot_examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Lietotājs izveido profilu ar vārdu, e-pastu un paroli."",""tokens"":[""lietotājs"",""izveido"",""profilu"",""ar"",""vārdu"",""e-pastu"",""un"",""paroli""],""normalized_tokens"":[""lietotajs"",""izveido"",""profilu"",""ar"",""vardu"",""e-pastu"",""un"",""paroli""]},{""sentence"":""Lietotājs iegūst profilu ar id."",""tokens"":[""lietotājs"",""iegūst"",""profilu"",""ar"",""id""],""normalized_tokens"":[""lietotajs"",""iegust"",""profilu"",""ar"",""id""]}]}
+
+Original content:
+Lietotājs izveido profilu ar vārdu, e-pastu un paroli. Lietotājs iegūst profilu ar id.
+</context>
+"
+,Dabīgās valodas prasību teksts - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API pasūtījumu izveidei, iegūšanai pēc id, atjaunināšanai un dzēšanai.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Izveidot pasūtījumu
+      description: Izveido jaunu pasūtījumu, norādot klienta identifikatoru, piegādes
+        adresi, produktu sarakstu un pasūtījuma kopējo summu.
+      operationId: createOrder
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createOrderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOrderRequest'
+  /orders/{id}:
+    get:
+      summary: Apskatīt pasūtījumu
+      description: Atgriež pasūtījumu pēc identifikatora.
+      operationId: getOrderById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getOrderByIdResponse'
+    patch:
+      summary: Atjaunot pasūtījumu
+      description: Atjaunina pasūtījuma piegādes adresi un pasūtījuma statusu pēc
+        identifikatora.
+      operationId: updateOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updateOrderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateOrderRequest'
+    delete:
+      summary: Dzēst pasūtījumu
+      description: Dzēš pasūtījumu pēc identifikatora.
+      operationId: deleteOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    createOrderRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Pasūtījuma piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts pasūtījumā.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+      required:
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+    createOrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Izveidotā pasūtījuma identifikators.
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+      required:
+      - id
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+    getOrderByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pasūtījuma identifikators.
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+        status:
+          type: string
+          description: Pasūtījuma statuss.
+      required:
+      - id
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+      - status
+    updateOrderRequest:
+      type: object
+      properties:
+        deliveryAddress:
+          type: string
+          description: Jaunā piegādes adrese.
+        status:
+          type: string
+          description: Jaunais pasūtījuma statuss.
+    updateOrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pasūtījuma identifikators.
+        deliveryAddress:
+          type: string
+          description: Atjauninātā piegādes adrese.
+        status:
+          type: string
+          description: Atjauninātais pasūtījuma statuss.
+      required:
+      - id
+      - deliveryAddress
+      - status
+    deleteOrderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API pasūtījumu izveidei, iegūšanai pēc id, atjaunināšanai un dzēšanai.
+
+## Endpoints
+
+### `POST /orders`
+
+Izveidot pasūtījumu
+
+Izveido jaunu pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu.
+
+Request body is expected in `application/json` format.
+
+### `GET /orders/{id}`
+
+Apskatīt pasūtījumu
+
+Atgriež pasūtījumu pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+
+### `PATCH /orders/{id}`
+
+Atjaunot pasūtījumu
+
+Atjaunina pasūtījuma piegādes adresi un pasūtījuma statusu pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+
+Request body is expected in `application/json` format.
+
+### `DELETE /orders/{id}`
+
+Dzēst pasūtījumu
+
+Dzēš pasūtījumu pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<few_shot_examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: is_api_related=false, endpoints=[]
+
+Example B input: 'User creates a profile with name, email and password. User gets profile by id.'
+Example B output pattern: is_api_related=true with a POST profile endpoint and a GET profile-by-id endpoint.
+
+Example C input: '@app.get(""/orders/{id}"")\ndef get_order(id: str): ...'
+Example C output pattern: is_api_related=true with a GET /orders/{id} endpoint and id path parameter.
+</few_shot_examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Sistēma ļauj izveidot pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu."",""tokens"":[""sistēma"",""ļauj"",""izveidot"",""pasūtījumu"",""norādot"",""klienta"",""identifikatoru"",""piegādes"",""adresi"",""produktu"",""sarakstu"",""un"",""pasūtījuma"",""kopējo"",""summu""],""normalized_tokens"":[""sistema"",""lauj"",""izveidot"",""pasutijumu"",""noradot"",""klienta"",""identifikatoru"",""piegades"",""adresi"",""produktu"",""sarakstu"",""un"",""pasutijuma"",""kopejo"",""summu""]},{""sentence"":""Lietotājs var apskatīt pasūtījumu ar id, atjaunot piegādes adresi, pasūtījuma statusu un dzēst pasūtījumu, izmantojot id."",""tokens"":[""lietotājs"",""var"",""apskatīt"",""pasūtījumu"",""ar"",""id"",""atjaunot"",""piegādes"",""adresi"",""pasūtījuma"",""statusu"",""un"",""dzēst"",""pasūtījumu"",""izmantojot"",""id""],""normalized_tokens"":[""lietotajs"",""var"",""apskatit"",""pasutijumu"",""ar"",""id"",""atjaunot"",""piegades"",""adresi"",""pasutijuma"",""statusu"",""un"",""dzest"",""pasutijumu"",""izmantojot"",""id""]}]}
+
+Original content:
+Sistēma ļauj izveidot pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu. Lietotājs var apskatīt pasūtījumu ar id, atjaunot piegādes adresi, pasūtījuma statusu un dzēst pasūtījumu, izmantojot id.
+</context>
+"
+,Koda fragments - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API endpoints for creating a profile and getting a profile by id.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Create profile
+      description: Creates a new profile using the provided payload.
+      operationId: create_profile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_profileResponse'
+  /profiles/{id}:
+    get:
+      summary: Get profile by id
+      description: Retrieves a single profile by its id.
+      operationId: get_profile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Identifier of the profile.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_profileResponse'
+components:
+  schemas:
+    create_profileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+    get_profileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API endpoints for creating a profile and getting a profile by id.
+
+## Endpoints
+
+### `POST /profiles`
+
+Create profile
+
+Creates a new profile using the provided payload.
+
+### `GET /profiles/{id}`
+
+Get profile by id
+
+Retrieves a single profile by its id.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Identifier of the profile. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<few_shot_examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: is_api_related=false, endpoints=[]
+
+Example B input: 'User creates a profile with name, email and password. User gets profile by id.'
+Example B output pattern: is_api_related=true with a POST profile endpoint and a GET profile-by-id endpoint.
+
+Example C input: '@app.get(""/orders/{id}"")\ndef get_order(id: str): ...'
+Example C output pattern: is_api_related=true with a GET /orders/{id} endpoint and id path parameter.
+</few_shot_examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":6,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/profiles""},{""method"":""POST"",""path"":""/profiles""},{""method"":""GET"",""path"":""/profiles/{id}""},{""method"":""GET"",""path"":""/profiles/{id}""}],""functions"":[{""name"":""create_profile"",""arguments"":""payload: ProfileCreate""},{""name"":""get_profile"",""arguments"":""id: str""}],""classes"":[]}
+
+Original content:
+@app.post(""/profiles"")
+def create_profile(payload: ProfileCreate):
+    pass
+
+@app.get(""/profiles/{id}"")
+def get_profile(id: str):
+    pass
+</context>
+"
+,Koda fragments - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: Extracted CRUD-style order endpoints from code-defined routes.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Create order
+      description: Creates a new order.
+      operationId: create_order
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create_orderRequest'
+  /orders/{id}:
+    get:
+      summary: Get order
+      description: Retrieves an order by ID.
+      operationId: get_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_orderResponse'
+    put:
+      summary: Update order
+      description: Updates an existing order by ID.
+      operationId: update_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/update_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update_orderRequest'
+    delete:
+      summary: Delete order
+      description: Deletes an order by ID.
+      operationId: delete_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    create_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Order creation payload.
+      required:
+      - payload
+    create_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+    get_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+    update_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Order update payload.
+      required:
+      - payload
+    update_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+    delete_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+Extracted CRUD-style order endpoints from code-defined routes.
+
+## Endpoints
+
+### `POST /orders`
+
+Create order
+
+Creates a new order.
+
+Request body is expected in `application/json` format.
+
+### `GET /orders/{id}`
+
+Get order
+
+Retrieves an order by ID.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+
+### `PUT /orders/{id}`
+
+Update order
+
+Updates an existing order by ID.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+
+Request body is expected in `application/json` format.
+
+### `DELETE /orders/{id}`
+
+Delete order
+
+Deletes an order by ID.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<few_shot_examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: is_api_related=false, endpoints=[]
+
+Example B input: 'User creates a profile with name, email and password. User gets profile by id.'
+Example B output pattern: is_api_related=true with a POST profile endpoint and a GET profile-by-id endpoint.
+
+Example C input: '@app.get(""/orders/{id}"")\ndef get_order(id: str): ...'
+Example C output pattern: is_api_related=true with a GET /orders/{id} endpoint and id path parameter.
+</few_shot_examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":12,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/orders""},{""method"":""POST"",""path"":""/orders""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""PUT"",""path"":""/orders/{id}""},{""method"":""PUT"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""}],""functions"":[{""name"":""create_order"",""arguments"":""payload: OrderCreate""},{""name"":""get_order"",""arguments"":""id: int""},{""name"":""update_order"",""arguments"":""id: int, payload: OrderUpdate""},{""name"":""delete_order"",""arguments"":""id: int""}],""classes"":[]}
+
+Original content:
+@router.post(""/orders"")
+def create_order(payload: OrderCreate):
+    pass
+
+@router.get(""/orders/{id}"")
+def get_order(id: int):
+    pass
+
+@router.put(""/orders/{id}"")
+def update_order(id: int, payload: OrderUpdate):
+    pass
+
+@router.delete(""/orders/{id}"")
+def delete_order(id: int):
+    pass
+</context>
+"
+,Jaukta ievade - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API atbalsta profila izveidi un profila iegūšanu pēc identifikatora.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Izveidot profilu
+      description: Izveido jaunu profilu, izmantojot pieprasījuma ķermeņa datus.
+      operationId: create_profile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_profileResponse'
+  /profiles/{id}:
+    get:
+      summary: Iegūt profilu pēc ID
+      description: Atgriež viena profila informāciju pēc tā identifikatora.
+      operationId: get_profile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Profila identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_profileResponse'
+components:
+  schemas:
+    create_profileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+    get_profileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API atbalsta profila izveidi un profila iegūšanu pēc identifikatora.
+
+## Endpoints
+
+### `POST /profiles`
+
+Izveidot profilu
+
+Izveido jaunu profilu, izmantojot pieprasījuma ķermeņa datus.
+
+### `GET /profiles/{id}`
+
+Iegūt profilu pēc ID
+
+Atgriež viena profila informāciju pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Profila identifikators. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<few_shot_examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: is_api_related=false, endpoints=[]
+
+Example B input: 'User creates a profile with name, email and password. User gets profile by id.'
+Example B output pattern: is_api_related=true with a POST profile endpoint and a GET profile-by-id endpoint.
+
+Example C input: '@app.get(""/orders/{id}"")\ndef get_order(id: str): ...'
+Example C output pattern: is_api_related=true with a GET /orders/{id} endpoint and id path parameter.
+</few_shot_examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":7,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/profiles""},{""method"":""POST"",""path"":""/profiles""},{""method"":""GET"",""path"":""/profiles/{id}""},{""method"":""GET"",""path"":""/profiles/{id}""}],""functions"":[{""name"":""create_profile"",""arguments"":""payload: ProfileCreate""},{""name"":""get_profile"",""arguments"":""id: str""}],""classes"":[]}
+
+Original content:
+Sistēmai jāļauj izveidot un apskatīt profilu.
+@app.post(""/profiles"")
+def create_profile(payload: ProfileCreate):
+    pass
+@app.get(""/profiles/{id}"")
+def get_profile(id: str):
+    pass
+</context>
+"
+,Jaukta ievade - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API pasūtījumu izveidei, apskatei pēc identifikatora, piegādes informācijas
+    atjaunināšanai un dzēšanai.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Izveidot pasūtījumu
+      description: Izveido jaunu pasūtījumu.
+      operationId: create_order
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_orderResponse'
+  /orders/{id}:
+    get:
+      summary: Iegūt pasūtījumu pēc identifikatora
+      description: Atgriež pasūtījumu pēc tā identifikatora.
+      operationId: get_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_orderResponse'
+    patch:
+      summary: Atjaunināt pasūtījuma piegādes informāciju
+      description: Daļēji atjaunina pasūtījumu pēc identifikatora, īpaši piegādes
+        informāciju.
+      operationId: update_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/update_orderResponse'
+    delete:
+      summary: Dzēst pasūtījumu
+      description: Dzēš pasūtījumu pēc identifikatora.
+      operationId: delete_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    create_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Izveidotā pasūtījuma identifikators.
+      required:
+      - id
+    get_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Pasūtījuma identifikators.
+      required:
+      - id
+    update_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Atjauninātā pasūtījuma identifikators.
+      required:
+      - id
+    delete_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API pasūtījumu izveidei, apskatei pēc identifikatora, piegādes informācijas atjaunināšanai un dzēšanai.
+
+## Endpoints
+
+### `POST /orders`
+
+Izveidot pasūtījumu
+
+Izveido jaunu pasūtījumu.
+
+### `GET /orders/{id}`
+
+Iegūt pasūtījumu pēc identifikatora
+
+Atgriež pasūtījumu pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+
+### `PATCH /orders/{id}`
+
+Atjaunināt pasūtījuma piegādes informāciju
+
+Daļēji atjaunina pasūtījumu pēc identifikatora, īpaši piegādes informāciju.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+
+### `DELETE /orders/{id}`
+
+Dzēst pasūtījumu
+
+Dzēš pasūtījumu pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<few_shot_examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: is_api_related=false, endpoints=[]
+
+Example B input: 'User creates a profile with name, email and password. User gets profile by id.'
+Example B output pattern: is_api_related=true with a POST profile endpoint and a GET profile-by-id endpoint.
+
+Example C input: '@app.get(""/orders/{id}"")\ndef get_order(id: str): ...'
+Example C output pattern: is_api_related=true with a GET /orders/{id} endpoint and id path parameter.
+</few_shot_examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":13,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/orders""},{""method"":""POST"",""path"":""/orders""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""PATCH"",""path"":""/orders/{id}""},{""method"":""PATCH"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""}],""functions"":[{""name"":""create_order"",""arguments"":""payload: OrderCreate""},{""name"":""get_order"",""arguments"":""id: int""},{""name"":""update_order"",""arguments"":""id: int, payload: OrderUpdate""},{""name"":""delete_order"",""arguments"":""id: int""}],""classes"":[]}
+
+Original content:
+Klientam jāspēj izveidot pasūtījumu, apskatīt to pēc identifikatora, atjaunot piegādes informāciju un dzēst pasūtījumu.
+@router.post(""/orders"")
+def create_order(payload: OrderCreate):
+    pass
+@router.get(""/orders/{id}"")
+def get_order(id: int):
+    pass
+@router.patch(""/orders/{id}"")
+def update_order(id: int, payload: OrderUpdate):
+    pass
+@router.delete(""/orders/{id}"")
+def delete_order(id: int):
+    pass
+</context>
+"
+,API nesaistīta vai nepietiekama ievade - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: Input is not API-related.
+servers:
+- url: http://localhost:8000
+paths: {}
+components:
+  schemas: {}
+","# Generated API
+
+Input is not API-related.
+
+## Documentation Status
+
+No API documentation could be generated because no API endpoints were identified from the provided input.
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<few_shot_examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: is_api_related=false, endpoints=[]
+
+Example B input: 'User creates a profile with name, email and password. User gets profile by id.'
+Example B output pattern: is_api_related=true with a POST profile endpoint and a GET profile-by-id endpoint.
+
+Example C input: '@app.get(""/orders/{id}"")\ndef get_order(id: str): ...'
+Example C output pattern: is_api_related=true with a GET /orders/{id} endpoint and id path parameter.
+</few_shot_examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":1,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""What is 2+2?"",""tokens"":[""what"",""is"",""2"",""2""],""normalized_tokens"":[""what"",""is"",""2"",""2""]}]}
+
+Original content:
+What is 2+2?
+</context>
+"
+,API nesaistīta vai nepietiekama ievade - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: Vispārīgas nefunkcionālas prasības par lietojamību, dizainu un veiktspēju;
+    API informācija nav sniegta.
+servers:
+- url: http://localhost:8000
+paths: {}
+components:
+  schemas: {}
+","# Generated API
+
+Vispārīgas nefunkcionālas prasības par lietojamību, dizainu un veiktspēju; API informācija nav sniegta.
+
+## Documentation Status
+
+No API documentation could be generated because no API endpoints were identified from the provided input.
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<few_shot_examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: is_api_related=false, endpoints=[]
+
+Example B input: 'User creates a profile with name, email and password. User gets profile by id.'
+Example B output pattern: is_api_related=true with a POST profile endpoint and a GET profile-by-id endpoint.
+
+Example C input: '@app.get(""/orders/{id}"")\ndef get_order(id: str): ...'
+Example C output pattern: is_api_related=true with a GET /orders/{id} endpoint and id path parameter.
+</few_shot_examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Sistēmai jābūt modernai, saprotamai, lietotājam draudzīgai un ar ātru veiktspēju."",""tokens"":[""sistēmai"",""jābūt"",""modernai"",""saprotamai"",""lietotājam"",""draudzīgai"",""un"",""ar"",""ātru"",""veiktspēju""],""normalized_tokens"":[""sistemai"",""jabut"",""modernai"",""saprotamai"",""lietotajam"",""draudzigai"",""un"",""ar"",""atru"",""veiktspeju""]},{""sentence"":""Sistēmai ir jānodrošina lietotājam laba pieredze un pārskatāms dizains."",""tokens"":[""sistēmai"",""ir"",""jānodrošina"",""lietotājam"",""laba"",""pieredze"",""un"",""pārskatāms"",""dizains""],""normalized_tokens"":[""sistemai"",""ir"",""janodrosina"",""lietotajam"",""laba"",""pieredze"",""un"",""parskatams"",""dizains""]}]}
+
+Original content:
+Sistēmai jābūt modernai, saprotamai, lietotājam draudzīgai un ar ātru veiktspēju. Sistēmai ir jānodrošina lietotājam laba pieredze un pārskatāms dizains.
+</context>
+"
+Jaukta ievade,Dabīgās valodas prasību teksts - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API ietver profila izveidi ar vārdu, e-pastu un paroli, kā arī profila
+    iegūšanu pēc identifikatora.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Izveidot profilu
+      description: Izveido jaunu lietotāja profilu ar vārdu, e-pastu un paroli.
+      operationId: createProfile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createProfileResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createProfileRequest'
+  /profiles/{id}:
+    get:
+      summary: Iegūt profilu pēc id
+      description: Atgriež lietotāja profilu pēc norādītā identifikatora.
+      operationId: getProfileById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Profila identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getProfileByIdResponse'
+components:
+  schemas:
+    createProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Lietotāja vārds.
+        email:
+          type: string
+          description: Lietotāja e-pasts.
+        password:
+          type: string
+          description: Lietotāja parole.
+      required:
+      - name
+      - email
+      - password
+    createProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Izveidotā profila identifikators.
+        name:
+          type: string
+          description: Lietotāja vārds.
+        email:
+          type: string
+          description: Lietotāja e-pasts.
+      required:
+      - id
+      - name
+      - email
+    getProfileByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Profila identifikators.
+        name:
+          type: string
+          description: Lietotāja vārds.
+        email:
+          type: string
+          description: Lietotāja e-pasts.
+      required:
+      - id
+      - name
+      - email
+","# Generated API
+
+API ietver profila izveidi ar vārdu, e-pastu un paroli, kā arī profila iegūšanu pēc identifikatora.
+
+## Endpoints
+
+### `POST /profiles`
+
+Izveidot profilu
+
+Izveido jaunu lietotāja profilu ar vārdu, e-pastu un paroli.
+
+Request body is expected in `application/json` format.
+
+### `GET /profiles/{id}`
+
+Iegūt profilu pēc id
+
+Atgriež lietotāja profilu pēc norādītā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Profila identifikators. |
+","You are an API analysis assistant.
+Your task is to analyze requirements text or code fragments and convert them into a structured intermediate result for OpenAPI generation.
+
+First, determine whether the input is related to API functionality.
+If the input is not API-related, return is_api_related=false, a short reason, and an empty endpoints list.
+
+If the input is API-related, identify API endpoints, HTTP methods, parameters, request body fields, and likely response fields.
+
+Rules:
+- Extract only information that is explicit or strongly implied.
+- Prefer REST-style resources and methods when appropriate.
+- If the input refers to a single item by id, model it as a path parameter.
+- Separate path/query parameters from request body fields.
+- If information is unclear, record assumptions or warnings instead of inventing unsupported details.
+- Write summaries and descriptions in the same natural language as the user's request text.
+- If the input contains only source code and no meaningful natural-language instructions, default to English.
+- If the input is mixed, prioritize the language used in the natural-language part of the input.
+- Do not switch the response language arbitrarily.
+
+<examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: not API-related, endpoints=[]
+
+Example B input: 'User creates a profile and gets profile by id.'
+Example B output pattern: API-related, with create and get endpoints.
+</examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Lietotājs izveido profilu ar vārdu, e-pastu un paroli."",""tokens"":[""lietotājs"",""izveido"",""profilu"",""ar"",""vārdu"",""e-pastu"",""un"",""paroli""],""normalized_tokens"":[""lietotajs"",""izveido"",""profilu"",""ar"",""vardu"",""e-pastu"",""un"",""paroli""]},{""sentence"":""Lietotājs iegūst profilu ar id."",""tokens"":[""lietotājs"",""iegūst"",""profilu"",""ar"",""id""],""normalized_tokens"":[""lietotajs"",""iegust"",""profilu"",""ar"",""id""]}]}
+
+Original content:
+Lietotājs izveido profilu ar vārdu, e-pastu un paroli. Lietotājs iegūst profilu ar id.
+</context>
+"
+,Dabīgās valodas prasību teksts - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API pasūtījumu izveidei, apskatei pēc id, atjaunināšanai un dzēšanai.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Izveidot pasūtījumu
+      description: Izveido jaunu pasūtījumu, norādot klienta identifikatoru, piegādes
+        adresi, produktu sarakstu un pasūtījuma kopējo summu.
+      operationId: createOrder
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createOrderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOrderRequest'
+  /orders/{id}:
+    get:
+      summary: Apskatīt pasūtījumu
+      description: Iegūst pasūtījumu pēc tā identifikatora.
+      operationId: getOrderById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getOrderByIdResponse'
+    patch:
+      summary: Atjaunot pasūtījumu
+      description: Atjaunina pasūtījuma piegādes adresi un/vai pasūtījuma statusu
+        pēc identifikatora.
+      operationId: updateOrderById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updateOrderByIdResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateOrderByIdRequest'
+    delete:
+      summary: Dzēst pasūtījumu
+      description: Dzēš pasūtījumu pēc tā identifikatora.
+      operationId: deleteOrderById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    createOrderRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Pasūtījuma piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts pasūtījumā.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+      required:
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+    createOrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Izveidotā pasūtījuma identifikators.
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+      required:
+      - id
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+    getOrderByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pasūtījuma identifikators.
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+        status:
+          type: string
+          description: Pasūtījuma statuss.
+      required:
+      - id
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+      - status
+    updateOrderByIdRequest:
+      type: object
+      properties:
+        deliveryAddress:
+          type: string
+          description: Jaunā piegādes adrese.
+        status:
+          type: string
+          description: Jaunais pasūtījuma statuss.
+    updateOrderByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pasūtījuma identifikators.
+        deliveryAddress:
+          type: string
+          description: Atjauninātā piegādes adrese.
+        status:
+          type: string
+          description: Atjauninātais pasūtījuma statuss.
+      required:
+      - id
+      - deliveryAddress
+      - status
+    deleteOrderByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Dzēstā pasūtījuma identifikators.
+      required:
+      - id
+","# Generated API
+
+API pasūtījumu izveidei, apskatei pēc id, atjaunināšanai un dzēšanai.
+
+## Endpoints
+
+### `POST /orders`
+
+Izveidot pasūtījumu
+
+Izveido jaunu pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu.
+
+Request body is expected in `application/json` format.
+
+### `GET /orders/{id}`
+
+Apskatīt pasūtījumu
+
+Iegūst pasūtījumu pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+
+### `PATCH /orders/{id}`
+
+Atjaunot pasūtījumu
+
+Atjaunina pasūtījuma piegādes adresi un/vai pasūtījuma statusu pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+
+Request body is expected in `application/json` format.
+
+### `DELETE /orders/{id}`
+
+Dzēst pasūtījumu
+
+Dzēš pasūtījumu pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+","You are an API analysis assistant.
+Your task is to analyze requirements text or code fragments and convert them into a structured intermediate result for OpenAPI generation.
+
+First, determine whether the input is related to API functionality.
+If the input is not API-related, return is_api_related=false, a short reason, and an empty endpoints list.
+
+If the input is API-related, identify API endpoints, HTTP methods, parameters, request body fields, and likely response fields.
+
+Rules:
+- Extract only information that is explicit or strongly implied.
+- Prefer REST-style resources and methods when appropriate.
+- If the input refers to a single item by id, model it as a path parameter.
+- Separate path/query parameters from request body fields.
+- If information is unclear, record assumptions or warnings instead of inventing unsupported details.
+- Write summaries and descriptions in the same natural language as the user's request text.
+- If the input contains only source code and no meaningful natural-language instructions, default to English.
+- If the input is mixed, prioritize the language used in the natural-language part of the input.
+- Do not switch the response language arbitrarily.
+
+<examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: not API-related, endpoints=[]
+
+Example B input: 'User creates a profile and gets profile by id.'
+Example B output pattern: API-related, with create and get endpoints.
+</examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Sistēma ļauj izveidot pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu."",""tokens"":[""sistēma"",""ļauj"",""izveidot"",""pasūtījumu"",""norādot"",""klienta"",""identifikatoru"",""piegādes"",""adresi"",""produktu"",""sarakstu"",""un"",""pasūtījuma"",""kopējo"",""summu""],""normalized_tokens"":[""sistema"",""lauj"",""izveidot"",""pasutijumu"",""noradot"",""klienta"",""identifikatoru"",""piegades"",""adresi"",""produktu"",""sarakstu"",""un"",""pasutijuma"",""kopejo"",""summu""]},{""sentence"":""Lietotājs var apskatīt pasūtījumu ar id, atjaunot piegādes adresi, pasūtījuma statusu un dzēst pasūtījumu, izmantojot id."",""tokens"":[""lietotājs"",""var"",""apskatīt"",""pasūtījumu"",""ar"",""id"",""atjaunot"",""piegādes"",""adresi"",""pasūtījuma"",""statusu"",""un"",""dzēst"",""pasūtījumu"",""izmantojot"",""id""],""normalized_tokens"":[""lietotajs"",""var"",""apskatit"",""pasutijumu"",""ar"",""id"",""atjaunot"",""piegades"",""adresi"",""pasutijuma"",""statusu"",""un"",""dzest"",""pasutijumu"",""izmantojot"",""id""]}]}
+
+Original content:
+Sistēma ļauj izveidot pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu. Lietotājs var apskatīt pasūtījumu ar id, atjaunot piegādes adresi, pasūtījuma statusu un dzēst pasūtījumu, izmantojot id.
+</context>
+"
+,Koda fragments - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API para crear un perfil y obtener un perfil por id.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Crear perfil
+      description: Crea un nuevo perfil usando los datos enviados en el cuerpo de
+        la solicitud.
+      operationId: create_profile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_profileResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create_profileRequest'
+  /profiles/{id}:
+    get:
+      summary: Obtener perfil por id
+      description: Obtiene un perfil específico mediante su identificador.
+      operationId: get_profile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Identificador del perfil.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_profileResponse'
+components:
+  schemas:
+    create_profileRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Datos del perfil a crear.
+      required:
+      - payload
+    create_profileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+    get_profileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API para crear un perfil y obtener un perfil por id.
+
+## Endpoints
+
+### `POST /profiles`
+
+Crear perfil
+
+Crea un nuevo perfil usando los datos enviados en el cuerpo de la solicitud.
+
+Request body is expected in `application/json` format.
+
+### `GET /profiles/{id}`
+
+Obtener perfil por id
+
+Obtiene un perfil específico mediante su identificador.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Identificador del perfil. |
+","You are an API analysis assistant.
+Your task is to analyze requirements text or code fragments and convert them into a structured intermediate result for OpenAPI generation.
+
+First, determine whether the input is related to API functionality.
+If the input is not API-related, return is_api_related=false, a short reason, and an empty endpoints list.
+
+If the input is API-related, identify API endpoints, HTTP methods, parameters, request body fields, and likely response fields.
+
+Rules:
+- Extract only information that is explicit or strongly implied.
+- Prefer REST-style resources and methods when appropriate.
+- If the input refers to a single item by id, model it as a path parameter.
+- Separate path/query parameters from request body fields.
+- If information is unclear, record assumptions or warnings instead of inventing unsupported details.
+- Write summaries and descriptions in the same natural language as the user's request text.
+- If the input contains only source code and no meaningful natural-language instructions, default to English.
+- If the input is mixed, prioritize the language used in the natural-language part of the input.
+- Do not switch the response language arbitrarily.
+
+<examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: not API-related, endpoints=[]
+
+Example B input: 'User creates a profile and gets profile by id.'
+Example B output pattern: API-related, with create and get endpoints.
+</examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":6,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/profiles""},{""method"":""POST"",""path"":""/profiles""},{""method"":""GET"",""path"":""/profiles/{id}""},{""method"":""GET"",""path"":""/profiles/{id}""}],""functions"":[{""name"":""create_profile"",""arguments"":""payload: ProfileCreate""},{""name"":""get_profile"",""arguments"":""id: str""}],""classes"":[]}
+
+Original content:
+@app.post(""/profiles"")
+def create_profile(payload: ProfileCreate):
+    pass
+
+@app.get(""/profiles/{id}"")
+def get_profile(id: str):
+    pass
+</context>
+"
+,Koda fragments - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: Order API with endpoints to create, retrieve, update, and delete an
+    order.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Create order
+      description: Creates a new order using the provided payload.
+      operationId: create_order
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create_orderRequest'
+  /orders/{id}:
+    get:
+      summary: Get order by id
+      description: Retrieves an order by its identifier.
+      operationId: get_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_orderResponse'
+    put:
+      summary: Update order by id
+      description: Updates an existing order identified by its identifier using the
+        provided payload.
+      operationId: update_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/update_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update_orderRequest'
+    delete:
+      summary: Delete order by id
+      description: Deletes an order identified by its identifier.
+      operationId: delete_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    create_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Order creation payload.
+      required:
+      - payload
+    create_orderResponse:
+      type: object
+      properties:
+        order:
+          type: string
+          description: Created order object.
+      required:
+      - order
+    get_orderResponse:
+      type: object
+      properties:
+        order:
+          type: string
+          description: Requested order object.
+      required:
+      - order
+    update_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Order update payload.
+      required:
+      - payload
+    update_orderResponse:
+      type: object
+      properties:
+        order:
+          type: string
+          description: Updated order object.
+      required:
+      - order
+    delete_orderResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether the order was deleted successfully.
+      required:
+      - success
+","# Generated API
+
+Order API with endpoints to create, retrieve, update, and delete an order.
+
+## Endpoints
+
+### `POST /orders`
+
+Create order
+
+Creates a new order using the provided payload.
+
+Request body is expected in `application/json` format.
+
+### `GET /orders/{id}`
+
+Get order by id
+
+Retrieves an order by its identifier.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+
+### `PUT /orders/{id}`
+
+Update order by id
+
+Updates an existing order identified by its identifier using the provided payload.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+
+Request body is expected in `application/json` format.
+
+### `DELETE /orders/{id}`
+
+Delete order by id
+
+Deletes an order identified by its identifier.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+","You are an API analysis assistant.
+Your task is to analyze requirements text or code fragments and convert them into a structured intermediate result for OpenAPI generation.
+
+First, determine whether the input is related to API functionality.
+If the input is not API-related, return is_api_related=false, a short reason, and an empty endpoints list.
+
+If the input is API-related, identify API endpoints, HTTP methods, parameters, request body fields, and likely response fields.
+
+Rules:
+- Extract only information that is explicit or strongly implied.
+- Prefer REST-style resources and methods when appropriate.
+- If the input refers to a single item by id, model it as a path parameter.
+- Separate path/query parameters from request body fields.
+- If information is unclear, record assumptions or warnings instead of inventing unsupported details.
+- Write summaries and descriptions in the same natural language as the user's request text.
+- If the input contains only source code and no meaningful natural-language instructions, default to English.
+- If the input is mixed, prioritize the language used in the natural-language part of the input.
+- Do not switch the response language arbitrarily.
+
+<examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: not API-related, endpoints=[]
+
+Example B input: 'User creates a profile and gets profile by id.'
+Example B output pattern: API-related, with create and get endpoints.
+</examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":12,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/orders""},{""method"":""POST"",""path"":""/orders""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""PUT"",""path"":""/orders/{id}""},{""method"":""PUT"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""}],""functions"":[{""name"":""create_order"",""arguments"":""payload: OrderCreate""},{""name"":""get_order"",""arguments"":""id: int""},{""name"":""update_order"",""arguments"":""id: int, payload: OrderUpdate""},{""name"":""delete_order"",""arguments"":""id: int""}],""classes"":[]}
+
+Original content:
+@router.post(""/orders"")
+def create_order(payload: OrderCreate):
+    pass
+
+@router.get(""/orders/{id}"")
+def get_order(id: int):
+    pass
+
+@router.put(""/orders/{id}"")
+def update_order(id: int, payload: OrderUpdate):
+    pass
+
+@router.delete(""/orders/{id}"")
+def delete_order(id: int):
+    pass
+</context>
+"
+,Jaukta ievade - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API ļauj izveidot profilu un apskatīt profilu pēc id.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Izveidot profilu
+      description: Izveido jaunu profilu no pieprasījuma datiem.
+      operationId: create_profile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_profileResponse'
+  /profiles/{id}:
+    get:
+      summary: Iegūt profilu pēc id
+      description: Atgriež profilu pēc norādītā identifikatora.
+      operationId: get_profile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Profila identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_profileResponse'
+components:
+  schemas:
+    create_profileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Izveidotā profila identifikators.
+      required:
+      - id
+    get_profileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Profila identifikators.
+      required:
+      - id
+","# Generated API
+
+API ļauj izveidot profilu un apskatīt profilu pēc id.
+
+## Endpoints
+
+### `POST /profiles`
+
+Izveidot profilu
+
+Izveido jaunu profilu no pieprasījuma datiem.
+
+### `GET /profiles/{id}`
+
+Iegūt profilu pēc id
+
+Atgriež profilu pēc norādītā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Profila identifikators. |
+","You are an API analysis assistant.
+Your task is to analyze requirements text or code fragments and convert them into a structured intermediate result for OpenAPI generation.
+
+First, determine whether the input is related to API functionality.
+If the input is not API-related, return is_api_related=false, a short reason, and an empty endpoints list.
+
+If the input is API-related, identify API endpoints, HTTP methods, parameters, request body fields, and likely response fields.
+
+Rules:
+- Extract only information that is explicit or strongly implied.
+- Prefer REST-style resources and methods when appropriate.
+- If the input refers to a single item by id, model it as a path parameter.
+- Separate path/query parameters from request body fields.
+- If information is unclear, record assumptions or warnings instead of inventing unsupported details.
+- Write summaries and descriptions in the same natural language as the user's request text.
+- If the input contains only source code and no meaningful natural-language instructions, default to English.
+- If the input is mixed, prioritize the language used in the natural-language part of the input.
+- Do not switch the response language arbitrarily.
+
+<examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: not API-related, endpoints=[]
+
+Example B input: 'User creates a profile and gets profile by id.'
+Example B output pattern: API-related, with create and get endpoints.
+</examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":7,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/profiles""},{""method"":""POST"",""path"":""/profiles""},{""method"":""GET"",""path"":""/profiles/{id}""},{""method"":""GET"",""path"":""/profiles/{id}""}],""functions"":[{""name"":""create_profile"",""arguments"":""payload: ProfileCreate""},{""name"":""get_profile"",""arguments"":""id: str""}],""classes"":[]}
+
+Original content:
+Sistēmai jāļauj izveidot un apskatīt profilu.
+@app.post(""/profiles"")
+def create_profile(payload: ProfileCreate):
+    pass
+@app.get(""/profiles/{id}"")
+def get_profile(id: str):
+    pass
+</context>
+"
+,Jaukta ievade - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API atbalsta pasūtījuma izveidi, apskati pēc identifikatora, piegādes
+    informācijas atjaunināšanu un pasūtījuma dzēšanu.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Izveidot pasūtījumu
+      description: Izveido jaunu pasūtījumu, izmantojot OrderCreate pieprasījuma datus.
+      operationId: create_order
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create_orderRequest'
+  /orders/{id}:
+    get:
+      summary: Iegūt pasūtījumu pēc identifikatora
+      description: Atgriež pasūtījuma informāciju pēc norādītā identifikatora.
+      operationId: get_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_orderResponse'
+    patch:
+      summary: Atjaunināt pasūtījuma piegādes informāciju
+      description: Atjaunina esoša pasūtījuma piegādes informāciju, izmantojot OrderUpdate
+        pieprasījuma datus.
+      operationId: update_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/update_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update_orderRequest'
+    delete:
+      summary: Dzēst pasūtījumu
+      description: Dzēš pasūtījumu pēc norādītā identifikatora.
+      operationId: delete_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    create_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Pasūtījuma izveides dati.
+      required:
+      - payload
+    create_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Izveidotā pasūtījuma identifikators.
+      required:
+      - id
+    get_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Pasūtījuma identifikators.
+      required:
+      - id
+    update_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Pasūtījuma atjaunināšanas dati, visticamāk piegādes informācijai.
+      required:
+      - payload
+    update_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Atjauninātā pasūtījuma identifikators.
+      required:
+      - id
+    delete_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API atbalsta pasūtījuma izveidi, apskati pēc identifikatora, piegādes informācijas atjaunināšanu un pasūtījuma dzēšanu.
+
+## Endpoints
+
+### `POST /orders`
+
+Izveidot pasūtījumu
+
+Izveido jaunu pasūtījumu, izmantojot OrderCreate pieprasījuma datus.
+
+Request body is expected in `application/json` format.
+
+### `GET /orders/{id}`
+
+Iegūt pasūtījumu pēc identifikatora
+
+Atgriež pasūtījuma informāciju pēc norādītā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+
+### `PATCH /orders/{id}`
+
+Atjaunināt pasūtījuma piegādes informāciju
+
+Atjaunina esoša pasūtījuma piegādes informāciju, izmantojot OrderUpdate pieprasījuma datus.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+
+Request body is expected in `application/json` format.
+
+### `DELETE /orders/{id}`
+
+Dzēst pasūtījumu
+
+Dzēš pasūtījumu pēc norādītā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+","You are an API analysis assistant.
+Your task is to analyze requirements text or code fragments and convert them into a structured intermediate result for OpenAPI generation.
+
+First, determine whether the input is related to API functionality.
+If the input is not API-related, return is_api_related=false, a short reason, and an empty endpoints list.
+
+If the input is API-related, identify API endpoints, HTTP methods, parameters, request body fields, and likely response fields.
+
+Rules:
+- Extract only information that is explicit or strongly implied.
+- Prefer REST-style resources and methods when appropriate.
+- If the input refers to a single item by id, model it as a path parameter.
+- Separate path/query parameters from request body fields.
+- If information is unclear, record assumptions or warnings instead of inventing unsupported details.
+- Write summaries and descriptions in the same natural language as the user's request text.
+- If the input contains only source code and no meaningful natural-language instructions, default to English.
+- If the input is mixed, prioritize the language used in the natural-language part of the input.
+- Do not switch the response language arbitrarily.
+
+<examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: not API-related, endpoints=[]
+
+Example B input: 'User creates a profile and gets profile by id.'
+Example B output pattern: API-related, with create and get endpoints.
+</examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":13,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/orders""},{""method"":""POST"",""path"":""/orders""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""PATCH"",""path"":""/orders/{id}""},{""method"":""PATCH"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""}],""functions"":[{""name"":""create_order"",""arguments"":""payload: OrderCreate""},{""name"":""get_order"",""arguments"":""id: int""},{""name"":""update_order"",""arguments"":""id: int, payload: OrderUpdate""},{""name"":""delete_order"",""arguments"":""id: int""}],""classes"":[]}
+
+Original content:
+Klientam jāspēj izveidot pasūtījumu, apskatīt to pēc identifikatora, atjaunot piegādes informāciju un dzēst pasūtījumu.
+@router.post(""/orders"")
+def create_order(payload: OrderCreate):
+    pass
+@router.get(""/orders/{id}"")
+def get_order(id: int):
+    pass
+@router.patch(""/orders/{id}"")
+def update_order(id: int, payload: OrderUpdate):
+    pass
+@router.delete(""/orders/{id}"")
+def delete_order(id: int):
+    pass
+</context>
+"
+,API nesaistīta vai nepietiekama ievade - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: OpenAPI specification generated from requirements or source code.
+servers:
+- url: http://localhost:8000
+paths: {}
+components:
+  schemas: {}
+","# Generated API
+
+OpenAPI specification generated from requirements or source code.
+
+## Documentation Status
+
+No API documentation could be generated because no API endpoints were identified from the provided input.
+","You are an API analysis assistant.
+Your task is to analyze requirements text or code fragments and convert them into a structured intermediate result for OpenAPI generation.
+
+First, determine whether the input is related to API functionality.
+If the input is not API-related, return is_api_related=false, a short reason, and an empty endpoints list.
+
+If the input is API-related, identify API endpoints, HTTP methods, parameters, request body fields, and likely response fields.
+
+Rules:
+- Extract only information that is explicit or strongly implied.
+- Prefer REST-style resources and methods when appropriate.
+- If the input refers to a single item by id, model it as a path parameter.
+- Separate path/query parameters from request body fields.
+- If information is unclear, record assumptions or warnings instead of inventing unsupported details.
+- Write summaries and descriptions in the same natural language as the user's request text.
+- If the input contains only source code and no meaningful natural-language instructions, default to English.
+- If the input is mixed, prioritize the language used in the natural-language part of the input.
+- Do not switch the response language arbitrarily.
+
+<examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: not API-related, endpoints=[]
+
+Example B input: 'User creates a profile and gets profile by id.'
+Example B output pattern: API-related, with create and get endpoints.
+</examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":1,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""What is 2+2?"",""tokens"":[""what"",""is"",""2"",""2""],""normalized_tokens"":[""what"",""is"",""2"",""2""]}]}
+
+Original content:
+What is 2+2?
+</context>
+"
+,API nesaistīta vai nepietiekama ievade - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: Nav identificējamas API darbības, resursi vai galapunkti.
+servers:
+- url: http://localhost:8000
+paths: {}
+components:
+  schemas: {}
+","# Generated API
+
+Nav identificējamas API darbības, resursi vai galapunkti.
+
+## Documentation Status
+
+No API documentation could be generated because no API endpoints were identified from the provided input.
+","You are an API analysis assistant.
+Your task is to analyze requirements text or code fragments and convert them into a structured intermediate result for OpenAPI generation.
+
+First, determine whether the input is related to API functionality.
+If the input is not API-related, return is_api_related=false, a short reason, and an empty endpoints list.
+
+If the input is API-related, identify API endpoints, HTTP methods, parameters, request body fields, and likely response fields.
+
+Rules:
+- Extract only information that is explicit or strongly implied.
+- Prefer REST-style resources and methods when appropriate.
+- If the input refers to a single item by id, model it as a path parameter.
+- Separate path/query parameters from request body fields.
+- If information is unclear, record assumptions or warnings instead of inventing unsupported details.
+- Write summaries and descriptions in the same natural language as the user's request text.
+- If the input contains only source code and no meaningful natural-language instructions, default to English.
+- If the input is mixed, prioritize the language used in the natural-language part of the input.
+- Do not switch the response language arbitrarily.
+
+<examples>
+Example A input: 'What is 2+2?'
+Example A output pattern: not API-related, endpoints=[]
+
+Example B input: 'User creates a profile and gets profile by id.'
+Example B output pattern: API-related, with create and get endpoints.
+</examples>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Sistēmai jābūt modernai, saprotamai, lietotājam draudzīgai un ar ātru veiktspēju."",""tokens"":[""sistēmai"",""jābūt"",""modernai"",""saprotamai"",""lietotājam"",""draudzīgai"",""un"",""ar"",""ātru"",""veiktspēju""],""normalized_tokens"":[""sistemai"",""jabut"",""modernai"",""saprotamai"",""lietotajam"",""draudzigai"",""un"",""ar"",""atru"",""veiktspeju""]},{""sentence"":""Sistēmai ir jānodrošina lietotājam laba pieredze un pārskatāms dizains."",""tokens"":[""sistēmai"",""ir"",""jānodrošina"",""lietotājam"",""laba"",""pieredze"",""un"",""pārskatāms"",""dizains""],""normalized_tokens"":[""sistemai"",""ir"",""janodrosina"",""lietotajam"",""laba"",""pieredze"",""un"",""parskatams"",""dizains""]}]}
+
+Original content:
+Sistēmai jābūt modernai, saprotamai, lietotājam draudzīgai un ar ātru veiktspēju. Sistēmai ir jānodrošina lietotājam laba pieredze un pārskatāms dizains.
+</context>
+"
+API nesaistīta vai nepietiekama ievade,Dabīgās valodas prasību teksts - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API profilu izveidei un izgūšanai pēc ID.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Izveidot profilu
+      description: Izveido jaunu lietotāja profilu ar vārdu, e-pastu un paroli.
+      operationId: createProfile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createProfileResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createProfileRequest'
+  /profiles/{id}:
+    get:
+      summary: Iegūt profilu
+      description: Atgriež lietotāja profilu pēc identifikatora.
+      operationId: getProfileById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Profila identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getProfileByIdResponse'
+components:
+  schemas:
+    createProfileRequest:
+      type: object
+      properties:
+        vārds:
+          type: string
+          description: Lietotāja vārds.
+        e-pasts:
+          type: string
+          description: Lietotāja e-pasta adrese.
+        parole:
+          type: string
+          description: Lietotāja parole.
+      required:
+      - vārds
+      - e-pasts
+      - parole
+    createProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Izveidotā profila identifikators.
+        vārds:
+          type: string
+          description: Lietotāja vārds.
+        e-pasts:
+          type: string
+          description: Lietotāja e-pasta adrese.
+      required:
+      - id
+      - vārds
+      - e-pasts
+    getProfileByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Profila identifikators.
+        vārds:
+          type: string
+          description: Lietotāja vārds.
+        e-pasts:
+          type: string
+          description: Lietotāja e-pasta adrese.
+      required:
+      - id
+      - vārds
+      - e-pasts
+","# Generated API
+
+API profilu izveidei un izgūšanai pēc ID.
+
+## Endpoints
+
+### `POST /profiles`
+
+Izveidot profilu
+
+Izveido jaunu lietotāja profilu ar vārdu, e-pastu un paroli.
+
+Request body is expected in `application/json` format.
+
+### `GET /profiles/{id}`
+
+Iegūt profilu
+
+Atgriež lietotāja profilu pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Profila identifikators. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Lietotājs izveido profilu ar vārdu, e-pastu un paroli."",""tokens"":[""lietotājs"",""izveido"",""profilu"",""ar"",""vārdu"",""e-pastu"",""un"",""paroli""],""normalized_tokens"":[""lietotajs"",""izveido"",""profilu"",""ar"",""vardu"",""e-pastu"",""un"",""paroli""]},{""sentence"":""Lietotājs iegūst profilu ar id."",""tokens"":[""lietotājs"",""iegūst"",""profilu"",""ar"",""id""],""normalized_tokens"":[""lietotajs"",""iegust"",""profilu"",""ar"",""id""]}]}
+
+Original content:
+Lietotājs izveido profilu ar vārdu, e-pastu un paroli. Lietotājs iegūst profilu ar id.
+</context>
+"
+,Dabīgās valodas prasību teksts - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API prasības pasūtījumu izveidei, izgūšanai pēc id, atjaunināšanai
+    un dzēšanai.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Izveidot pasūtījumu
+      description: Izveido jaunu pasūtījumu, norādot klienta identifikatoru, piegādes
+        adresi, produktu sarakstu un pasūtījuma kopējo summu.
+      operationId: createOrder
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createOrderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOrderRequest'
+  /orders/{id}:
+    get:
+      summary: Apskatīt pasūtījumu
+      description: Atgriež pasūtījumu pēc tā identifikatora.
+      operationId: getOrderById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getOrderByIdResponse'
+    patch:
+      summary: Atjaunot pasūtījumu
+      description: Atjaunina pasūtījuma piegādes adresi un pasūtījuma statusu pēc
+        identifikatora.
+      operationId: updateOrderById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updateOrderByIdResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateOrderByIdRequest'
+    delete:
+      summary: Dzēst pasūtījumu
+      description: Dzēš pasūtījumu pēc tā identifikatora.
+      operationId: deleteOrderById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    createOrderRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Pasūtījuma piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts pasūtījumā.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+      required:
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+    createOrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Izveidotā pasūtījuma identifikators.
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+      required:
+      - id
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+    getOrderByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pasūtījuma identifikators.
+        customerId:
+          type: string
+          description: Klienta identifikators.
+        deliveryAddress:
+          type: string
+          description: Piegādes adrese.
+        products:
+          type: array
+          items:
+            type: string
+          description: Produktu saraksts.
+        totalAmount:
+          type: number
+          description: Pasūtījuma kopējā summa.
+        status:
+          type: string
+          description: Pasūtījuma statuss.
+      required:
+      - id
+      - customerId
+      - deliveryAddress
+      - products
+      - totalAmount
+      - status
+    updateOrderByIdRequest:
+      type: object
+      properties:
+        deliveryAddress:
+          type: string
+          description: Jaunā piegādes adrese.
+        status:
+          type: string
+          description: Jaunais pasūtījuma statuss.
+    updateOrderByIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pasūtījuma identifikators.
+        deliveryAddress:
+          type: string
+          description: Atjauninātā piegādes adrese.
+        status:
+          type: string
+          description: Atjauninātais pasūtījuma statuss.
+      required:
+      - id
+      - deliveryAddress
+      - status
+    deleteOrderByIdResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API prasības pasūtījumu izveidei, izgūšanai pēc id, atjaunināšanai un dzēšanai.
+
+## Endpoints
+
+### `POST /orders`
+
+Izveidot pasūtījumu
+
+Izveido jaunu pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu.
+
+Request body is expected in `application/json` format.
+
+### `GET /orders/{id}`
+
+Apskatīt pasūtījumu
+
+Atgriež pasūtījumu pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+
+### `PATCH /orders/{id}`
+
+Atjaunot pasūtījumu
+
+Atjaunina pasūtījuma piegādes adresi un pasūtījuma statusu pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+
+Request body is expected in `application/json` format.
+
+### `DELETE /orders/{id}`
+
+Dzēst pasūtījumu
+
+Dzēš pasūtījumu pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Pasūtījuma identifikators. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Sistēma ļauj izveidot pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu."",""tokens"":[""sistēma"",""ļauj"",""izveidot"",""pasūtījumu"",""norādot"",""klienta"",""identifikatoru"",""piegādes"",""adresi"",""produktu"",""sarakstu"",""un"",""pasūtījuma"",""kopējo"",""summu""],""normalized_tokens"":[""sistema"",""lauj"",""izveidot"",""pasutijumu"",""noradot"",""klienta"",""identifikatoru"",""piegades"",""adresi"",""produktu"",""sarakstu"",""un"",""pasutijuma"",""kopejo"",""summu""]},{""sentence"":""Lietotājs var apskatīt pasūtījumu ar id, atjaunot piegādes adresi, pasūtījuma statusu un dzēst pasūtījumu, izmantojot id."",""tokens"":[""lietotājs"",""var"",""apskatīt"",""pasūtījumu"",""ar"",""id"",""atjaunot"",""piegādes"",""adresi"",""pasūtījuma"",""statusu"",""un"",""dzēst"",""pasūtījumu"",""izmantojot"",""id""],""normalized_tokens"":[""lietotajs"",""var"",""apskatit"",""pasutijumu"",""ar"",""id"",""atjaunot"",""piegades"",""adresi"",""pasutijuma"",""statusu"",""un"",""dzest"",""pasutijumu"",""izmantojot"",""id""]}]}
+
+Original content:
+Sistēma ļauj izveidot pasūtījumu, norādot klienta identifikatoru, piegādes adresi, produktu sarakstu un pasūtījuma kopējo summu. Lietotājs var apskatīt pasūtījumu ar id, atjaunot piegādes adresi, pasūtījuma statusu un dzēst pasūtījumu, izmantojot id.
+</context>
+"
+,Koda fragments - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API with endpoints to create a profile and retrieve a profile by ID.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Create profile
+      description: Creates a new profile.
+      operationId: create_profile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_profileResponse'
+  /profiles/{id}:
+    get:
+      summary: Get profile
+      description: Retrieves a profile by ID.
+      operationId: get_profile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Profile identifier.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_profileResponse'
+components:
+  schemas:
+    create_profileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+    get_profileResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API with endpoints to create a profile and retrieve a profile by ID.
+
+## Endpoints
+
+### `POST /profiles`
+
+Create profile
+
+Creates a new profile.
+
+### `GET /profiles/{id}`
+
+Get profile
+
+Retrieves a profile by ID.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Profile identifier. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":6,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/profiles""},{""method"":""POST"",""path"":""/profiles""},{""method"":""GET"",""path"":""/profiles/{id}""},{""method"":""GET"",""path"":""/profiles/{id}""}],""functions"":[{""name"":""create_profile"",""arguments"":""payload: ProfileCreate""},{""name"":""get_profile"",""arguments"":""id: str""}],""classes"":[]}
+
+Original content:
+@app.post(""/profiles"")
+def create_profile(payload: ProfileCreate):
+    pass
+
+@app.get(""/profiles/{id}"")
+def get_profile(id: str):
+    pass
+</context>
+"
+,Koda fragments - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API endpoints for creating, retrieving, updating, and deleting orders.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Create order
+      description: Creates a new order using the provided payload.
+      operationId: create_order
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create_orderRequest'
+  /orders/{id}:
+    get:
+      summary: Get order
+      description: Retrieves a single order by its identifier.
+      operationId: get_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_orderResponse'
+    put:
+      summary: Update order
+      description: Updates an existing order identified by its identifier using the
+        provided payload.
+      operationId: update_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/update_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update_orderRequest'
+    delete:
+      summary: Delete order
+      description: Deletes an existing order by its identifier.
+      operationId: delete_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Order identifier.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    create_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Order creation data.
+      required:
+      - payload
+    create_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+    get_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Order identifier.
+      required:
+      - id
+    update_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Order update data.
+      required:
+      - payload
+    update_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Order identifier.
+      required:
+      - id
+    delete_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API endpoints for creating, retrieving, updating, and deleting orders.
+
+## Endpoints
+
+### `POST /orders`
+
+Create order
+
+Creates a new order using the provided payload.
+
+Request body is expected in `application/json` format.
+
+### `GET /orders/{id}`
+
+Get order
+
+Retrieves a single order by its identifier.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+
+### `PUT /orders/{id}`
+
+Update order
+
+Updates an existing order identified by its identifier using the provided payload.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+
+Request body is expected in `application/json` format.
+
+### `DELETE /orders/{id}`
+
+Delete order
+
+Deletes an existing order by its identifier.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Order identifier. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":12,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/orders""},{""method"":""POST"",""path"":""/orders""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""PUT"",""path"":""/orders/{id}""},{""method"":""PUT"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""}],""functions"":[{""name"":""create_order"",""arguments"":""payload: OrderCreate""},{""name"":""get_order"",""arguments"":""id: int""},{""name"":""update_order"",""arguments"":""id: int, payload: OrderUpdate""},{""name"":""delete_order"",""arguments"":""id: int""}],""classes"":[]}
+
+Original content:
+@router.post(""/orders"")
+def create_order(payload: OrderCreate):
+    pass
+
+@router.get(""/orders/{id}"")
+def get_order(id: int):
+    pass
+
+@router.put(""/orders/{id}"")
+def update_order(id: int, payload: OrderUpdate):
+    pass
+
+@router.delete(""/orders/{id}"")
+def delete_order(id: int):
+    pass
+</context>
+"
+,Jaukta ievade - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API atbalsta profila izveidi un profila apskati pēc identifikatora.
+servers:
+- url: http://localhost:8000
+paths:
+  /profiles:
+    post:
+      summary: Izveidot profilu
+      description: Izveido jaunu profilu no piegādātā pieprasījuma datu objekta.
+      operationId: create_profile
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_profileResponse'
+  /profiles/{id}:
+    get:
+      summary: Apskatīt profilu
+      description: Atgriež profilu pēc tā identifikatora.
+      operationId: get_profile
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Profila identifikators.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_profileResponse'
+components:
+  schemas:
+    create_profileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Izveidotā profila identifikators.
+      required:
+      - id
+    get_profileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Profila identifikators.
+      required:
+      - id
+","# Generated API
+
+API atbalsta profila izveidi un profila apskati pēc identifikatora.
+
+## Endpoints
+
+### `POST /profiles`
+
+Izveidot profilu
+
+Izveido jaunu profilu no piegādātā pieprasījuma datu objekta.
+
+### `GET /profiles/{id}`
+
+Apskatīt profilu
+
+Atgriež profilu pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | string | yes | Profila identifikators. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":7,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/profiles""},{""method"":""POST"",""path"":""/profiles""},{""method"":""GET"",""path"":""/profiles/{id}""},{""method"":""GET"",""path"":""/profiles/{id}""}],""functions"":[{""name"":""create_profile"",""arguments"":""payload: ProfileCreate""},{""name"":""get_profile"",""arguments"":""id: str""}],""classes"":[]}
+
+Original content:
+Sistēmai jāļauj izveidot un apskatīt profilu.
+@app.post(""/profiles"")
+def create_profile(payload: ProfileCreate):
+    pass
+@app.get(""/profiles/{id}"")
+def get_profile(id: str):
+    pass
+</context>
+"
+,Jaukta ievade - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: API pasūtījumu resursam ar izveides, iegūšanas pēc identifikatora,
+    piegādes informācijas daļējas atjaunošanas un dzēšanas operācijām.
+servers:
+- url: http://localhost:8000
+paths:
+  /orders:
+    post:
+      summary: Izveidot pasūtījumu
+      description: Izveido jaunu pasūtījumu no ievadītajiem datiem.
+      operationId: create_order
+      parameters: []
+      responses:
+        '201':
+          description: Resource created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create_orderRequest'
+  /orders/{id}:
+    get:
+      summary: Apskatīt pasūtījumu pēc identifikatora
+      description: Atgriež pasūtījumu pēc tā identifikatora.
+      operationId: get_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_orderResponse'
+    patch:
+      summary: Atjaunot pasūtījuma piegādes informāciju
+      description: Daļēji atjauno esoša pasūtījuma piegādes informāciju pēc identifikatora.
+      operationId: update_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Request completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/update_orderResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update_orderRequest'
+    delete:
+      summary: Dzēst pasūtījumu
+      description: Dzēš pasūtījumu pēc identifikatora.
+      operationId: delete_order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Pasūtījuma identifikators.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Resource deleted successfully.
+components:
+  schemas:
+    create_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Dati jauna pasūtījuma izveidei.
+      required:
+      - payload
+    create_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Izveidotā pasūtījuma identifikators.
+      required:
+      - id
+    get_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Pasūtījuma identifikators.
+      required:
+      - id
+    update_orderRequest:
+      type: object
+      properties:
+        payload:
+          type: string
+          description: Dati pasūtījuma piegādes informācijas atjaunošanai.
+      required:
+      - payload
+    update_orderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Atjaunotā pasūtījuma identifikators.
+      required:
+      - id
+    delete_orderResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation result
+      required:
+      - message
+","# Generated API
+
+API pasūtījumu resursam ar izveides, iegūšanas pēc identifikatora, piegādes informācijas daļējas atjaunošanas un dzēšanas operācijām.
+
+## Endpoints
+
+### `POST /orders`
+
+Izveidot pasūtījumu
+
+Izveido jaunu pasūtījumu no ievadītajiem datiem.
+
+Request body is expected in `application/json` format.
+
+### `GET /orders/{id}`
+
+Apskatīt pasūtījumu pēc identifikatora
+
+Atgriež pasūtījumu pēc tā identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+
+### `PATCH /orders/{id}`
+
+Atjaunot pasūtījuma piegādes informāciju
+
+Daļēji atjauno esoša pasūtījuma piegādes informāciju pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+
+Request body is expected in `application/json` format.
+
+### `DELETE /orders/{id}`
+
+Dzēst pasūtījumu
+
+Dzēš pasūtījumu pēc identifikatora.
+
+| Parameter | In | Type | Required | Description |
+|---|---|---|---|---|
+| id | path | integer | yes | Pasūtījuma identifikators. |
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: code
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""code"",""line_count"":13,""steps"":[""text normalization"",""code structure scanning"",""route detection"",""function signature extraction"",""structured representation""],""routes"":[{""method"":""POST"",""path"":""/orders""},{""method"":""POST"",""path"":""/orders""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""GET"",""path"":""/orders/{id}""},{""method"":""PATCH"",""path"":""/orders/{id}""},{""method"":""PATCH"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""},{""method"":""DELETE"",""path"":""/orders/{id}""}],""functions"":[{""name"":""create_order"",""arguments"":""payload: OrderCreate""},{""name"":""get_order"",""arguments"":""id: int""},{""name"":""update_order"",""arguments"":""id: int, payload: OrderUpdate""},{""name"":""delete_order"",""arguments"":""id: int""}],""classes"":[]}
+
+Original content:
+Klientam jāspēj izveidot pasūtījumu, apskatīt to pēc identifikatora, atjaunot piegādes informāciju un dzēst pasūtījumu.
+@router.post(""/orders"")
+def create_order(payload: OrderCreate):
+    pass
+@router.get(""/orders/{id}"")
+def get_order(id: int):
+    pass
+@router.patch(""/orders/{id}"")
+def update_order(id: int, payload: OrderUpdate):
+    pass
+@router.delete(""/orders/{id}"")
+def delete_order(id: int):
+    pass
+</context>
+"
+,API nesaistīta vai nepietiekama ievade - 1. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: Non-API input.
+servers:
+- url: http://localhost:8000
+paths: {}
+components:
+  schemas: {}
+","# Generated API
+
+Non-API input.
+
+## Documentation Status
+
+No API documentation could be generated because no API endpoints were identified from the provided input.
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":1,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""What is 2+2?"",""tokens"":[""what"",""is"",""2"",""2""],""normalized_tokens"":[""what"",""is"",""2"",""2""]}]}
+
+Original content:
+What is 2+2?
+</context>
+"
+,API nesaistīta vai nepietiekama ievade - 2. piemērs,"openapi: 3.1.0
+info:
+  title: Generated API
+  version: 1.0.0
+  description: Aprakstītas nefunkcionālas prasības par modernu dizainu, saprotamību,
+    lietotājam draudzīgu saskarni, ātru veiktspēju un labu lietotāja pieredzi.
+servers:
+- url: http://localhost:8000
+paths: {}
+components:
+  schemas: {}
+","# Generated API
+
+Aprakstītas nefunkcionālas prasības par modernu dizainu, saprotamību, lietotājam draudzīgu saskarni, ātru veiktspēju un labu lietotāja pieredzi.
+
+## Documentation Status
+
+No API documentation could be generated because no API endpoints were identified from the provided input.
+","<system_role>
+You are an API analysis assistant used in a method for generating OpenAPI specifications from requirements text or code fragments.
+Your job is to transform the input into a structured, OpenAPI-ready intermediate result.
+Be conservative, explicit, and faithful to the source.
+</system_role>
+
+<method>
+Follow these stages in order:
+Stage 1: classify whether the input is API-related.
+Stage 2: identify API operations, resources, parameters, request data, and likely response fields.
+Stage 3: normalize them into REST-oriented structures only when the normalization is strongly justified.
+Stage 4: record uncertainty as assumptions or warnings instead of inventing unsupported details.
+</method>
+
+<classification_rules>
+Treat the input as API-related only if it describes endpoints, operations, resources, requests, responses, data exchange, controller logic, route definitions, or backend functionality that clearly implies an API.
+If the input is a general question, arithmetic, casual conversation, or a domain statement without API behavior, set is_api_related=false.
+If is_api_related=false, do not invent endpoints, keep endpoints empty, explain briefly in reason, and keep warnings minimal.
+</classification_rules>
+
+<extraction_rules>
+Extract only information that is explicit or strongly implied.
+Prefer REST semantics when the source describes CRUD-like operations.
+Use plural resource paths when a clear resource can be inferred, but do not treat standard REST normalization as a warning by default.
+If the source says 'by id' or clearly refers to a single entity identifier, model it as a path parameter.
+Use POST for create, GET for retrieval, DELETE for deletion, and PUT for update unless the source clearly indicates partial update semantics, in which case use PATCH.
+Keep path/query parameters separate from request body fields.
+If response fields are incomplete, include only the most defensible fields.
+Write summary and description texts in the same natural language as the user's request text.
+If the input consists only of source code and does not contain meaningful natural-language instructions, default to English.
+If the input is mixed, prioritize the language used in the natural-language part of the input.
+Do not switch the response language arbitrarily.
+</extraction_rules>
+
+<uncertainty_policy>
+Use assumptions only when a reasonable implementation choice is necessary to complete the structure.
+Use warnings only when ambiguity materially affects the API contract or when the input is too weak for confident extraction.
+Do not produce noisy or repetitive assumptions/warnings.
+Prefer empty arrays over commentary that adds little value.
+</uncertainty_policy>
+
+<output_contract>
+Return only valid JSON with exactly this structure and no extra keys:
+{
+  ""is_api_related"": boolean,
+  ""reason"": string,
+  ""summary"": string,
+  ""assumptions"": [string],
+  ""warnings"": [string],
+  ""endpoints"": [
+    {
+      ""path"": string,
+      ""method"": ""GET""|""POST""|""PUT""|""PATCH""|""DELETE"",
+      ""summary"": string,
+      ""description"": string,
+      ""operation_id"": string,
+      ""path_params"": [{""name"": string, ""type"": string, ""required"": true, ""description"": string}],
+      ""query_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""body_params"": [{""name"": string, ""type"": string, ""required"": boolean, ""description"": string}],
+      ""response_fields"": [{""name"": string, ""type"": string, ""description"": string}]
+    }
+  ]
+}
+</output_contract>
+
+<context>
+Requested input type: auto
+
+Detected input type: requirements
+
+Selected model choice: gpt-5.4
+
+Preprocessing result:
+{""requested_input_type"":""auto"",""detected_input_type"":""requirements"",""sentence_count"":2,""steps"":[""text normalization"",""sentence segmentation"",""tokenization"",""structured representation""],""sentences"":[{""sentence"":""Sistēmai jābūt modernai, saprotamai, lietotājam draudzīgai un ar ātru veiktspēju."",""tokens"":[""sistēmai"",""jābūt"",""modernai"",""saprotamai"",""lietotājam"",""draudzīgai"",""un"",""ar"",""ātru"",""veiktspēju""],""normalized_tokens"":[""sistemai"",""jabut"",""modernai"",""saprotamai"",""lietotajam"",""draudzigai"",""un"",""ar"",""atru"",""veiktspeju""]},{""sentence"":""Sistēmai ir jānodrošina lietotājam laba pieredze un pārskatāms dizains."",""tokens"":[""sistēmai"",""ir"",""jānodrošina"",""lietotājam"",""laba"",""pieredze"",""un"",""pārskatāms"",""dizains""],""normalized_tokens"":[""sistemai"",""ir"",""janodrosina"",""lietotajam"",""laba"",""pieredze"",""un"",""parskatams"",""dizains""]}]}
+
+Original content:
+Sistēmai jābūt modernai, saprotamai, lietotājam draudzīgai un ar ātru veiktspēju. Sistēmai ir jānodrošina lietotājam laba pieredze un pārskatāms dizains.
+</context>
+"
